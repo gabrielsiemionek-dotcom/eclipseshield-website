@@ -1,0 +1,35 @@
+---
+// Interim terms. Full website and quote terms to follow (to be reviewed before launch).
+import PageLayout from '../layouts/PageLayout.astro';
+import { site } from '../config/site';
+---
+
+<PageLayout
+  title="Terms of Use"
+  description="Terms of use for the Eclipse Shield website."
+  eyebrow="Legal"
+  heading="Terms of use"
+  intro="Draft: last updated October 2026."
+>
+  <h2>About these terms</h2>
+  <p>
+    This website is operated by {site.legalName}. By using it you agree to these terms. If you have any questions,
+    email <a href={`mailto:${site.email}`}>{site.email}</a>.
+  </p>
+
+  <h2>Information on this site</h2>
+  <p>
+    We aim to keep the information on this site accurate and up to date, but it is general information about window film
+    and is not a quote or an offer. The suitability of a film for your glass is confirmed when we survey or quote for
+    your job.
+  </p>
+
+  <h2>Quotes and work</h2>
+  <p>
+    Quotes are free and carry no obligation. Any work we carry out is covered by the terms set out in your written
+    quote.
+  </p>
+
+  <h2>Law</h2>
+  <p>These terms are governed by the law of England and Wales.</p>
+</PageLayout>

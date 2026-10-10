@@ -1,19 +1,575 @@
 ---
-// Placeholder so the first production deploy builds. Replaced by the real home page.
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { services } from '../data/services';
+import { homeFaqs } from '../data/faqs';
+import { site } from '../config/site';
+import heroPhoto from '../assets/photos/fitting-glass-room.jpg';
+import seaViewPhoto from '../assets/photos/glass-room-sea-view.jpg';
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: homeFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const steps = [
+  {
+    icon: 'message',
+    title: 'Enquire',
+    text: 'Fill in the quote form, email or call us. Photos of your windows help us give you a faster, more accurate quote.',
+  },
+  {
+    icon: 'ruler',
+    title: 'Survey or quote',
+    text: `We visit to measure up and show you film samples (free within ${site.freeSurveyRadiusMiles} miles of ${site.base}), or quote from your photos and measurements.`,
+  },
+  {
+    icon: 'tools',
+    title: 'Fitting',
+    text: 'We fit the film at a time that suits you, clean up afterwards and explain how to look after it.',
+  },
+] as const;
+
+const reasons = [
+  {
+    icon: 'star',
+    title: `${site.filmBrand} window film`,
+    text: `We fit films from ${site.filmBrand}, one of the best-known names in window film.`,
+  },
+  {
+    icon: 'ruler',
+    title: 'Free surveys and quotes',
+    text: `Free, no-obligation surveys within ${site.freeSurveyRadiusMiles} miles of ${site.base}, and free quotes from photos further afield.`,
+  },
+  {
+    icon: 'clock',
+    title: 'Same-day replies',
+    text: 'Send your enquiry and photos and we reply the same day, seven days a week.',
+  },
+  {
+    icon: 'eye-off',
+    title: 'Straight advice',
+    text: 'We tell you what each film will and won’t do, including the limits of mirror film at night, so there are no surprises.',
+  },
+] as const;
 ---
 
-<!doctype html>
-<html lang="en-GB">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Eclipse Shield | Window film for homes and businesses</title>
-    <meta name="robots" content="noindex" />
-  </head>
-  <body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#0a0a0b;color:#c4c8ce;font-family:system-ui,sans-serif;text-align:center">
-    <main>
-      <h1 style="color:#e3c37c;letter-spacing:.2em;font-weight:500">ECLIPSE SHIELD</h1>
-      <p>Website coming soon. Email <a style="color:#e3c37c" href="mailto:contact@eclipseshield.co.uk">contact@eclipseshield.co.uk</a></p>
-    </main>
-  </body>
-</html>
+<BaseLayout
+  title="Window Tinting for Homes and Businesses | Eclipse Shield"
+  description="Privacy, solar control, frosted, UV, safety and anti-graffiti window film for homes and businesses. Based in Bromborough, covering Cheshire, Merseyside and Flintshire. Free quotes."
+  schema={[faqSchema]}
+>
+  <!-- Hero -->
+  <section class="hero on-dark">
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow">Window film for homes and businesses</p>
+        <h1>Cooler rooms, more privacy, less glare</h1>
+        <p class="lead">
+          Eclipse Shield fits professional {site.filmBrand} window film: privacy, heat and glare control, frosted
+          and decorative, UV, safety and anti-graffiti films. {site.serviceAreaLine}.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--gold" href="/quote/">
+            Get a free quote
+            <Icon name="arrow" />
+          </a>
+          <a class="btn btn--ghost" href="#services">See our services</a>
+        </div>
+        <ul class="hero__points">
+          <li><Icon name="ruler" /> Free surveys within {site.freeSurveyRadiusMiles} miles</li>
+          <li><Icon name="clock" /> Same-day replies</li>
+          <li><Icon name="star" /> {site.filmBrand} films</li>
+        </ul>
+      </div>
+      <figure class="hero__media">
+        <Picture
+          src={heroPhoto}
+          formats={['avif', 'webp']}
+          widths={[360, 540, 720, 960]}
+          sizes="(min-width: 32rem) 30rem, calc(100vw - 2rem)"
+          alt="An Eclipse Shield fitter applying window film to a frameless glass room with a garden and sea view behind"
+          priority
+          layout="none"
+        />
+        <figcaption>Fitting film to a frameless glass room</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" id="services" aria-labelledby="services-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">What we fit</p>
+        <h2 id="services-title">Window film for every kind of glass problem</h2>
+        <p class="lead">
+          Too hot, too bright, too overlooked, or just plain glass that needs a smarter finish. Film is a quick,
+          tidy fix with no need to replace your windows.
+        </p>
+      </div>
+      <div class="grid grid--3">
+        {
+          services.map((s) => (
+            <article class="card service-card">
+              <div class="icon-badge">
+                <Icon name={s.icon} />
+              </div>
+              <h3>{s.title}</h3>
+              <p>{s.short}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Homes vs businesses -->
+  <section class="section section--mist" id="who" aria-labelledby="who-title">
+    <div class="wrap">
+      <div class="section-head section-head--center">
+        <p class="eyebrow">Homes and businesses</p>
+        <h2 id="who-title">Film for the way you use your glass</h2>
+      </div>
+      <div class="grid grid--2">
+        <article class="card audience-card">
+          <div class="icon-badge"><Icon name="home" /></div>
+          <h3>For homes</h3>
+          <ul class="ticks">
+            <li>Privacy for bathrooms, front doors and overlooked rooms</li>
+            <li>Cooler conservatories, glass rooms and loft windows</li>
+            <li>Less glare on TVs and screens</li>
+            <li>Help protect floors and furniture from fading</li>
+            <li>Safety film for large panes and glass doors</li>
+          </ul>
+          <a class="btn btn--outline" href="/quote/">Get a free quote for your home</a>
+        </article>
+        <article class="card audience-card">
+          <div class="icon-badge"><Icon name="building" /></div>
+          <h3>For businesses</h3>
+          <ul class="ticks">
+            <li>Frosted and branded film for offices and meeting rooms</li>
+            <li>Manifestation strips for glass partitions and doors</li>
+            <li>Solar control for hot, south-facing offices and shopfronts</li>
+            <li>UV film to help protect window displays and stock</li>
+            <li>Safety, security and anti-graffiti film for shopfronts</li>
+          </ul>
+          <a class="btn btn--outline" href="/quote/">Get a free quote for your business</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section section--dark" id="how" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-title">From enquiry to fitted in three steps</h2>
+      </div>
+      <ol class="steps">
+        {
+          steps.map((step, i) => (
+            <li class="step">
+              <span class="step__num" aria-hidden="true">
+                {i + 1}
+              </span>
+              <div class="step__icon">
+                <Icon name={step.icon} />
+              </div>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <a class="btn btn--gold" href="/quote/">
+        Start with a free quote
+        <Icon name="arrow" />
+      </a>
+    </div>
+  </section>
+
+  <!-- Why us -->
+  <section class="section" aria-labelledby="why-title">
+    <div class="wrap why">
+      <div>
+        <p class="eyebrow">Why Eclipse Shield</p>
+        <h2 id="why-title">A local team that keeps things simple</h2>
+        <ul class="why__list">
+          {
+            reasons.map((r) => (
+              <li>
+                <div class="icon-badge">
+                  <Icon name={r.icon} />
+                </div>
+                <div>
+                  <h3>{r.title}</h3>
+                  <p>{r.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <figure class="why__media">
+        <Picture
+          src={seaViewPhoto}
+          formats={['avif', 'webp']}
+          widths={[360, 540, 720, 960]}
+          sizes="(min-width: 62rem) 30rem, calc(100vw - 2rem)"
+          alt="Inside a glass garden room with floor-to-ceiling glazing looking out over a garden towards the sea"
+          layout="none"
+          loading="lazy"
+        />
+        <figcaption>Large glass rooms like this can overheat quickly in summer. Solar control film helps.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Service area -->
+  <section class="section section--mist" id="areas" aria-labelledby="areas-title">
+    <div class="wrap areas">
+      <div>
+        <p class="eyebrow">Where we work</p>
+        <h2 id="areas-title">Based in Bromborough, working across the North West and North Wales</h2>
+        <p class="lead">{site.serviceAreaLine}.</p>
+        <p>
+          Surveys are free within {site.freeSurveyRadiusMiles} miles of {site.base}. For larger projects (around
+          £1,000 and up) we can travel anywhere in the UK. Get in touch and we will confirm by email.
+        </p>
+      </div>
+      <ul class="areas__list">
+        <li>
+          <Icon name="pin" />
+          <div>
+            <h3>Merseyside</h3>
+            <p>The Wirral, Liverpool, Sefton, Knowsley and St Helens</p>
+          </div>
+        </li>
+        <li>
+          <Icon name="pin" />
+          <div>
+            <h3>Cheshire</h3>
+            <p>Chester, Ellesmere Port, Neston, Warrington, Northwich and beyond</p>
+          </div>
+        </li>
+        <li>
+          <Icon name="pin" />
+          <div>
+            <h3>Flintshire</h3>
+            <p>Deeside, Flint, Mold, Buckley, Holywell and surrounding areas</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq" aria-labelledby="faq-title">
+    <div class="wrap faq">
+      <div class="section-head">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="faq-title">Questions we get asked a lot</h2>
+        <p class="lead">Can’t see your question? <a href={`mailto:${site.email}`}>Email us</a> and we will help.</p>
+      </div>
+      <div class="faq__list">
+        {
+          homeFaqs.map((f) => (
+            <details class="faq__item">
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    background:
+      radial-gradient(48rem 32rem at 90% -10%, rgb(201 161 74 / 0.22), transparent 60%),
+      radial-gradient(30rem 20rem at -10% 110%, rgb(196 200 206 / 0.08), transparent 60%),
+      var(--black);
+    color: var(--silver);
+    padding-block: clamp(2.5rem, 7vw, 5.5rem);
+    overflow: hidden;
+  }
+  .hero h1 {
+    color: var(--paper);
+  }
+  .hero .lead {
+    color: var(--silver);
+  }
+  .hero__grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .hero__points {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--silver);
+  }
+  .hero__points li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .hero__points :global(svg) {
+    width: 1.15rem;
+    height: 1.15rem;
+    color: var(--gold);
+  }
+  .hero__media {
+    margin: 0;
+    position: relative;
+    max-width: 30rem;
+    justify-self: center;
+    width: 100%;
+  }
+  .hero__media :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgb(201 161 74 / 0.35);
+  }
+  .hero__media figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.88rem;
+    color: var(--silver-dim);
+  }
+  @media (min-width: 62rem) {
+    .hero__grid {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+  }
+
+  /* Services */
+  .service-card h3 {
+    margin-bottom: 0.5rem;
+  }
+  .service-card p {
+    color: var(--text-2);
+  }
+
+  /* Audience */
+  .audience-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .audience-card .ticks {
+    flex: 1;
+  }
+  .audience-card .btn {
+    align-self: flex-start;
+  }
+
+  /* Steps */
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2.5rem;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    counter-reset: step;
+  }
+  .step {
+    position: relative;
+    background: var(--charcoal);
+    border: 1px solid var(--graphite);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+  }
+  .step__num {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--graphite);
+  }
+  .step__icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 12px;
+    border: 1px solid rgb(201 161 74 / 0.45);
+    color: var(--gold);
+    margin-bottom: 1.1rem;
+  }
+  .step__icon :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .step p {
+    margin: 0;
+  }
+
+  /* Why us */
+  .why {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .why__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+  .why__list li {
+    display: flex;
+    gap: 1rem;
+  }
+  .why__list .icon-badge {
+    flex: none;
+    margin: 0;
+  }
+  .why__list h3 {
+    margin-bottom: 0.3rem;
+  }
+  .why__list p {
+    margin: 0;
+    color: var(--text-2);
+  }
+  .why__media {
+    margin: 0;
+  }
+  .why__media :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+  .why__media figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-2);
+  }
+  @media (min-width: 62rem) {
+    .why {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+
+  /* Areas */
+  .areas {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+  .areas__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+  }
+  .areas__list li {
+    display: flex;
+    gap: 1rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+  }
+  .areas__list :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex: none;
+    color: var(--gold-deep);
+    margin-top: 0.1rem;
+  }
+  .areas__list h3 {
+    margin-bottom: 0.2rem;
+  }
+  .areas__list p {
+    margin: 0;
+    color: var(--text-2);
+  }
+  @media (min-width: 62rem) {
+    .areas {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+  }
+
+  /* FAQ */
+  .faq {
+    display: grid;
+    gap: 1rem;
+  }
+  .faq__list {
+    border-top: 1px solid var(--line);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq__item summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    font-weight: 700;
+    font-size: 1.08rem;
+  }
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq__item summary::after {
+    content: '+';
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--mist);
+    color: var(--gold-deep);
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
+  .faq__item[open] summary::after {
+    content: '−';
+  }
+  .faq__item p {
+    color: var(--text-2);
+    padding-right: 3rem;
+    margin-bottom: 1.25rem;
+  }
+  @media (min-width: 62rem) {
+    .faq {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 4rem;
+    }
+  }
+</style>

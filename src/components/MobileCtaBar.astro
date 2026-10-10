@@ -1,0 +1,54 @@
+---
+import Icon from './Icon.astro';
+import { site, telHref } from '../config/site';
+---
+
+<div class="mobile-cta">
+  <a class="btn btn--gold mobile-cta__quote" href="/quote/">Get a free quote</a>
+  {
+    site.phone ? (
+      <a class="mobile-cta__icon" href={telHref(site.phone)}>
+        <Icon name="phone" label={`Call ${site.phone}`} />
+      </a>
+    ) : (
+      <a class="mobile-cta__icon" href={`mailto:${site.email}`}>
+        <Icon name="mail" label={`Email ${site.email}`} />
+      </a>
+    )
+  }
+</div>
+
+<style>
+  .mobile-cta {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 40;
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.7rem var(--gutter) calc(0.7rem + env(safe-area-inset-bottom));
+    background: rgb(10 10 11 / 0.97);
+    border-top: 1px solid rgb(201 161 74 / 0.25);
+  }
+  .mobile-cta__quote {
+    flex: 1;
+  }
+  .mobile-cta__icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    flex: none;
+    border-radius: 50%;
+    border: 2px solid rgb(255 255 255 / 0.35);
+    color: var(--paper);
+  }
+  .mobile-cta__icon :global(svg) {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+  @media (min-width: 48rem) {
+    .mobile-cta {
+      display: none;
+    }
+  }
+</style>
