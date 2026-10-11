@@ -4,7 +4,7 @@ import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileCtaBar from '../components/MobileCtaBar.astro';
-import { site } from '../config/site';
+import { site, telHref } from '../config/site';
 
 interface Props {
   title: string;
@@ -33,7 +33,12 @@ const localBusiness = {
   logo: `${site.url}/apple-touch-icon.png`,
   image: ogImageUrl,
   email: site.email,
-  ...(site.phone ? { telephone: site.phone } : {}),
+  ...(site.phone ? { telephone: telHref(site.phone).replace('tel:', '') } : {}),
+  identifier: {
+    '@type': 'PropertyValue',
+    propertyID: 'Companies House company number',
+    value: site.companyNumber,
+  },
   description: `Window film fitting for homes and businesses: privacy, solar control, frosted and decorative, UV, safety and anti-graffiti films. ${site.serviceAreaLine}.`,
   address: {
     '@type': 'PostalAddress',

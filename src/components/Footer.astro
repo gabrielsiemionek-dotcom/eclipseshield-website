@@ -55,7 +55,10 @@ const year = new Date().getFullYear();
   </div>
 
   <div class="wrap site-footer__legal">
-    <p>&copy; {year} {site.legalName}. All rights reserved.</p>
+    <p>
+      &copy; {year} {site.legalName}. Registered in {site.registeredIn}, company number {site.companyNumber}.
+      {site.registeredOffice && <>Registered office: {site.registeredOffice}.</>}
+    </p>
     <ul>
       <li><a href="/privacy/">Privacy policy</a></li>
       <li><a href="/terms/">Terms</a></li>

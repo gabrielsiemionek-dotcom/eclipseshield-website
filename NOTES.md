@@ -2,6 +2,13 @@
 
 A short dated entry for every change, newest first. Open issues are at the bottom.
 
+## 2026-10-11: Phone number and company details
+
+- Added the phone number (07592 196929). Call links now show in the header (wide screens), mobile quote bar, call-to-action band and quote page.
+- Footer and privacy notice show "Registered in England and Wales, company number 17381324". Company number also added to the LocalBusiness structured data.
+- Owner confirmed permission to use the glass room job photos.
+- `npm run lh -- home quote` runs a mobile Lighthouse check. Result: home 99 / 100 / 100 / 100, quote 100 / 100 / 100 / 100.
+
 ## 2026-10-10: Scaffold, home page and first preview
 
 - New Astro 7 static site (plain components and CSS, no UI framework), deployed with Cloudflare Pages.
@@ -17,14 +24,13 @@ A short dated entry for every change, newest first. Open issues are at the botto
 
 ## Open issues
 
-- **Phone number needed.** Call links are hidden until `phone` is set in `src/config/site.ts`.
 - **WhatsApp** is switched off for now (set `whatsapp` in `src/config/site.ts` to enable it later).
-- **Company details on the website.** UK limited companies must show their registered name, company number, registered office address and place of registration (for example "Registered in England and Wales") on their website. This can be a registered office service address rather than a home address. Needed before launch.
+- **Registered office address.** Company number is shown; UK limited companies must also show their registered office address on the website (a registered office service address is fine). Set `registeredOffice` in `src/config/site.ts` before launch.
 - **ICO data protection fee.** Most businesses that handle customer details need to pay this. Should be done before the quote form goes live; the privacy policy will reference the registration.
 - **Insurance.** None yet, so the site makes no insurance claims. Add it to "Why us" once it is in place (public liability is worth having for fitting work).
 - **3M film warranty.** Unknown, so not mentioned yet.
 - **Opening hours.** Shown as "Open 7 days a week"; the structured data currently says open 24 hours, 7 days. Confirm what hours customers can actually call.
-- **Photo permissions.** The glass room photos show a customer's home. Get the owner's OK to use them, and confirm what film was fitted so captions can be more specific.
+- **Photo captions.** Permission confirmed. Tell us which film was fitted on the glass room job so captions can be more specific.
 - **AI-edited images** in `Web Images` (privacy glass outside, exterior privacy glass) are not used. If they are used later, they must be labelled as illustrations, not real jobs.
 - **Logo files.** A vector (SVG) or high-resolution transparent PNG of the final logo would help for print and future pages.
 - **Domain and email.** The domain is registered through Squarespace. The email provider for `contact@eclipseshield.co.uk` needs confirming before DNS changes (Resend records, custom domain).
