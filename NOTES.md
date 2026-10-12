@@ -4,11 +4,11 @@ A short dated entry for every change, newest first. Open issues are at the botto
 
 ## 2026-10-12: Service pages, Homes and Businesses
 
-- Six service pages from one template (, content in ): privacy and one-way mirror, solar and heat control, frosted and decorative, UV and fade protection, safety and security, anti-graffiti. Each has benefits, where it is used, film options, an honest "Good to know" box, FAQs, related services and a quote call to action.
-- Services overview page () with a "start with the problem" guide.
-- Homes () and Businesses () landing pages: room-by-room and workplace-by-workplace uses linking to the right services, why film, what happens at the survey, FAQs.
+- Six service pages from one template (`src/pages/services/[slug].astro`, content in `src/data/services.ts`): privacy and one-way mirror, solar and heat control, frosted and decorative, UV and fade protection, safety and security, anti-graffiti. Each has benefits, where it is used, film options, an honest "Good to know" box, FAQs, related services and a quote call to action.
+- Services overview page (`/services/`) with a "start with the problem" guide.
+- Homes (`/homes/`) and Businesses (`/businesses/`) landing pages: room-by-room and workplace-by-workplace uses linking to the right services, why film, what happens at the survey, FAQs.
 - Service, BreadcrumbList and FAQPage structured data; visible breadcrumbs on inner pages.
-- Services without a real photo use a simple illustration of the film effect () until photos are ready. Solar control uses the glass room terrace photo.
+- Services without a real photo use a simple illustration of the film effect (`FilmVisual`) until photos are ready. Solar control uses the glass room terrace photo.
 - Navigation now links to Services, Homes and Businesses. Areas and FAQ still point at home page sections.
 - Fixed the header phone icon size and number wrapping.
 - Copy avoids promises not yet confirmed (for example, bringing film samples to surveys).
