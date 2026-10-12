@@ -1,10 +1,11 @@
 ---
 // Privacy policy (UK GDPR). DRAFT: to be reviewed by the business before launch.
-// Cookies and analytics sections are completed when the consent banner and GA4 are added.
+// The cookies section switches automatically: analytics details appear only once a GTM ID is configured.
 import PageLayout from '../layouts/PageLayout.astro';
 import { site } from '../config/site';
 
-const updated = '13 October 2026';
+const updated = '12 October 2026';
+const analytics = Boolean(site.gtmId);
 const mail = `mailto:${site.email}`;
 ---
 
@@ -63,11 +64,60 @@ const mail = `mailto:${site.email}`;
     the site from attacks.
   </p>
 
-  <h3>Cookies and analytics</h3>
-  <p>
-    We do not currently use analytics or advertising cookies. If we add them, we will only use them with your consent,
-    and we will update this policy first.
-  </p>
+  <h2 id="cookies">Cookies and similar technologies</h2>
+
+  <h3>Necessary</h3>
+  <p>These are needed for the website to work and don’t need your consent:</p>
+  <ul>
+    <li>
+      Your cookie choice, saved in your browser’s local storage (<code>es_consent</code>) for 12 months so we don’t ask
+      on every page.
+    </li>
+    <li>Security and spam protection from Cloudflare, including Turnstile on the quote form.</li>
+  </ul>
+
+  <h3>Analytics</h3>
+  {
+    analytics ? (
+      <>
+        <p>
+          If you allow analytics, we use Google Analytics (through Google Tag Manager) to see which pages are visited,
+          how people find us and whether the quote form works well. This tells us about visits in general. We don’t use
+          it to identify you, and we don’t use advertising features. Nothing from Google is loaded until you accept.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Cookie</th>
+              <th scope="col">Purpose</th>
+              <th scope="col">Lasts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>_ga</code></td>
+              <td>Tells visits from different browsers apart</td>
+              <td>2 years</td>
+            </tr>
+            <tr>
+              <td><code>_ga_&lt;ID&gt;</code></td>
+              <td>Keeps track of a visit (session)</td>
+              <td>2 years</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Our lawful basis is your consent. You can change your mind at any time with the <strong>Cookie settings</strong>
+          link at the bottom of every page. If you withdraw consent, we stop analytics and remove these cookies.
+        </p>
+      </>
+    ) : (
+      <p>
+        We do not currently use analytics or advertising cookies. If we add them, we will only use them with your
+        consent, and we will update this policy first.
+      </p>
+    )
+  }
 
   <h2>Who we share your information with</h2>
   <p>We do not sell your information. We use these service providers to run our business:</p>
@@ -75,6 +125,7 @@ const mail = `mailto:${site.email}`;
     <li><strong>Cloudflare</strong>: website hosting, security and spam protection</li>
     <li><strong>Resend</strong>: delivers quote requests from the website to our inbox</li>
     <li><strong>Google Workspace</strong>: our business email, where your enquiry is stored</li>
+    {analytics && <li><strong>Google Analytics</strong>: website statistics, only if you allow analytics cookies</li>}
   </ul>
   <p>
     These providers act on our instructions. Some may process data outside the UK. Where they do, we rely on safeguards

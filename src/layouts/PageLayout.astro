@@ -38,4 +38,29 @@ const { heading, eyebrow, intro, ...rest } = Astro.props;
   .prose :global(h2:first-child) {
     margin-top: 0;
   }
+  .prose :global(h3) {
+    margin-top: 1.5em;
+  }
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 1.25em;
+    font-size: 0.95rem;
+  }
+  .prose :global(th),
+  .prose :global(td) {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .prose :global(th) {
+    background: var(--mist);
+  }
+  .prose :global(code) {
+    font-size: 0.9em;
+    background: var(--mist);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
 </style>

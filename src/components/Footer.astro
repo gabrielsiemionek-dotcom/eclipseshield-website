@@ -62,6 +62,7 @@ const year = new Date().getFullYear();
     <ul>
       <li><a href="/privacy/">Privacy policy</a></li>
       <li><a href="/terms/">Terms</a></li>
+      <li><button type="button" class="site-footer__cookie" data-cookie-settings hidden>Cookie settings</button></li>
     </ul>
   </div>
 </footer>
@@ -132,6 +133,21 @@ const year = new Date().getFullYear();
   }
   .site-footer__legal p {
     margin: 0;
+  }
+  .site-footer__cookie {
+    background: none;
+    border: 0;
+    padding: 0.15rem 0;
+    font: inherit;
+    color: var(--silver);
+    cursor: pointer;
+  }
+  .site-footer__cookie:hover {
+    color: var(--gold-hi);
+    text-decoration: underline;
+  }
+  .site-footer__cookie[hidden] {
+    display: none;
   }
   .site-footer .site-footer__legal ul {
     display: flex;

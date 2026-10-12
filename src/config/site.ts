@@ -24,6 +24,10 @@ export const site = {
   // Public Turnstile site key (safe to publish). For local testing, set PUBLIC_TURNSTILE_SITE_KEY to
   // Cloudflare's test key 1x00000000000000000000AA in .env.local (see .env.example).
   turnstileSiteKey: (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined) || '0x4AAAAAAFUbwIV65ZHcvXtg',
+  // Google Tag Manager container ID, e.g. 'GTM-ABC1234' (public). Leave empty until analytics is set up:
+  // while empty, no tags load, no cookie banner shows and the privacy policy says no analytics is used.
+  // Can also be set with the PUBLIC_GTM_ID build variable.
+  gtmId: ((import.meta.env.PUBLIC_GTM_ID as string | undefined) || '').trim(),
 } as const;
 
 export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, '').replace(/^0/, '+44')}`;

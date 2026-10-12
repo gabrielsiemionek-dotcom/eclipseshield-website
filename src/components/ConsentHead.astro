@@ -1,0 +1,46 @@
+---
+// Google Consent Mode v2 defaults, plus the Google Tag Manager loader. Goes first in <head>.
+// "Basic" consent mode: GTM is only loaded after the visitor allows analytics, so no Google tags run
+// (and no cookieless pings are sent) before consent.
+import { site } from '../config/site';
+---
+
+<script is:inline define:vars={{ gtmId: site.gtmId }}>
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () {
+    window.dataLayer.push(arguments);
+  };
+  window.gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+    functionality_storage: 'granted',
+    security_storage: 'granted',
+    wait_for_update: 500,
+  });
+  window.gtag('set', 'ads_data_redaction', true);
+
+  window.esConsent = { gtmId: gtmId, choice: null };
+  window.esLoadGtm = function () {
+    if (!gtmId || window.esGtmLoaded) return;
+    window.esGtmLoaded = true;
+    window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(gtmId);
+    document.head.appendChild(s);
+  };
+
+  // Re-apply a saved choice (kept for 12 months, then we ask again).
+  try {
+    var saved = JSON.parse(localStorage.getItem('es_consent') || 'null');
+    if (saved && saved.v === 1 && Date.now() - saved.ts < 365 * 864e5) {
+      window.esConsent.choice = saved;
+      if (saved.analytics) {
+        window.gtag('consent', 'update', { analytics_storage: 'granted' });
+        window.esLoadGtm();
+      }
+    }
+  } catch (e) {}
+</script>

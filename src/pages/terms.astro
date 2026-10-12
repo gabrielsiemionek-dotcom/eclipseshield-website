@@ -1,35 +1,100 @@
 ---
-// Interim terms. Full website and quote terms to follow (to be reviewed before launch).
+// Website terms of use, plus a short summary of how quotes and work are handled.
+// DRAFT: to be reviewed by the business (ideally with a solicitor) before relying on it.
 import PageLayout from '../layouts/PageLayout.astro';
 import { site } from '../config/site';
+
+const updated = '12 October 2026';
+const mail = `mailto:${site.email}`;
 ---
 
 <PageLayout
   title="Terms of Use"
-  description="Terms of use for the Eclipse Shield website."
+  description="Terms of use for the Eclipse Shield website, and how our quotes and work are handled."
   eyebrow="Legal"
   heading="Terms of use"
-  intro="Draft: last updated October 2026."
+  intro={`Last updated ${updated}.`}
 >
-  <h2>About these terms</h2>
+  <h2>About us</h2>
   <p>
-    This website is operated by {site.legalName}. By using it you agree to these terms. If you have any questions,
-    email <a href={`mailto:${site.email}`}>{site.email}</a>.
+    This website is run by {site.legalName}, a company registered in {site.registeredIn} with company number
+    {' '}{site.companyNumber}{site.registeredOffice ? `, registered office ${site.registeredOffice}` : ''}. You can
+    contact us at <a href={mail}>{site.email}</a>{site.phone && <> or on {site.phone}</>}.
+  </p>
+  <p>By using this website you agree to these terms. If you don’t agree, please don’t use the site.</p>
+
+  <h2>Using this website</h2>
+  <ul>
+    <li>You can use this website free of charge to find out about our services and contact us.</li>
+    <li>
+      We may update, change or suspend the website at any time. We aim to keep it available but can’t promise it will
+      always be.
+    </li>
+    <li>
+      Please don’t misuse the site, for example by sending spam through the quote form, trying to get unauthorised
+      access, or introducing anything harmful.
+    </li>
+  </ul>
+
+  <h2>Information on this website</h2>
+  <p>
+    The information on this website is general information about window film. It isn’t advice for your particular
+    windows. How a film performs depends on things like the type of glass, which way the window faces and how the room
+    is used. We confirm which film is suitable for your glass when we survey or quote for your job.
+  </p>
+  <p>
+    We try to keep the information accurate and up to date, but we can’t guarantee it is always complete or current.
   </p>
 
-  <h2>Information on this site</h2>
+  <h2>Quotes</h2>
+  <ul>
+    <li>Quotes are free and come with no obligation.</li>
+    <li>
+      A quote is based on the information and photos you give us, or on what we see at a survey. If the job turns out
+      to be different, for example the glass type or access, we will tell you and confirm any change before going
+      ahead.
+    </li>
+    <li>Each quote says how long it is valid for.</li>
+  </ul>
+
+  <h2>Work we carry out</h2>
   <p>
-    We aim to keep the information on this site accurate and up to date, but it is general information about window film
-    and is not a quote or an offer. The suitability of a film for your glass is confirmed when we survey or quote for
-    your job.
+    Any work is carried out under the terms in your written quote or agreement, which will set out the price, what is
+    included and any guarantee on the film and fitting. If anything in your quote differs from these terms, the quote
+    applies.
+  </p>
+  <p>
+    If you are a consumer, you have legal rights, including that our work is carried out with reasonable care and
+    skill. If you agree a contract with us at your home or remotely (for example by phone or email), you normally have
+    14 days to cancel. If you ask us to start work within those 14 days and then cancel, you may have to pay for work
+    already done. Nothing in these terms affects your legal rights.
   </p>
 
-  <h2>Quotes and work</h2>
+  <h2>Our content</h2>
   <p>
-    Quotes are free and carry no obligation. Any work we carry out is covered by the terms set out in your written
-    quote.
+    The text, photos, logo and design of this website belong to {site.legalName} or are used with permission. Please
+    don’t copy or reuse them without asking us first.
   </p>
+
+  <h2>Links to other websites</h2>
+  <p>Where we link to other websites, we aren’t responsible for their content or how they use your information.</p>
+
+  <h2>Our responsibility to you</h2>
+  <p>
+    We don’t exclude or limit our liability where it would be unlawful to do so, including for death or personal
+    injury caused by our negligence, or for fraud. We are not responsible for losses from using this website that we
+    couldn’t reasonably have foreseen, or for business losses arising from use of the website.
+  </p>
+
+  <h2>Your personal information</h2>
+  <p>How we use personal information is explained in our <a href="/privacy/">privacy policy</a>.</p>
+
+  <h2>Changes to these terms</h2>
+  <p>We may update these terms from time to time. The date at the top shows when they were last changed.</p>
 
   <h2>Law</h2>
-  <p>These terms are governed by the law of England and Wales.</p>
+  <p>
+    These terms are governed by the law of England and Wales. If you live in Scotland or Northern Ireland, you can also
+    bring proceedings in your local courts.
+  </p>
 </PageLayout>

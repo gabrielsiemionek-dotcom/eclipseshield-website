@@ -4,7 +4,10 @@ import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileCtaBar from '../components/MobileCtaBar.astro';
+import ConsentHead from '../components/ConsentHead.astro';
+import ConsentBanner from '../components/ConsentBanner.astro';
 import { site, telHref } from '../config/site';
+import { showMobileCta } from '../lib/page';
 
 interface Props {
   title: string;
@@ -86,8 +89,11 @@ const jsonLd = [localBusiness, ...schema];
     <meta name="twitter:card" content="summary_large_image" />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Consent Mode defaults, then GTM only if analytics was allowed. Kept last so it never delays the first paint. -->
+    <ConsentHead />
   </head>
-  <body>
+  <body class:list={{ 'has-mobile-cta': showMobileCta(Astro.url.pathname) }}>
     <a class="skip-link" href="#main">Skip to content</a>
     <Header />
     <main id="main">
@@ -95,5 +101,6 @@ const jsonLd = [localBusiness, ...schema];
     </main>
     <Footer />
     <MobileCtaBar />
+    <ConsentBanner />
   </body>
 </html>
