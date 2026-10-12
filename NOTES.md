@@ -2,6 +2,22 @@
 
 A short dated entry for every change, newest first. Open issues are at the bottom.
 
+## 2026-10-13: Quote form, contact page and privacy policy
+
+- **Delivery choice:** Cloudflare Pages Function (`functions/api/quote.ts`) plus Resend. Chosen over a form service because it is free at our volume (Resend: 3,000 emails a month), supports photo attachments, keeps the email layout ours, and adds no extra third party beyond Resend. Nothing is stored: the email is the only copy.
+- **Spam protection:** hidden honeypot field plus Cloudflare Turnstile in "interaction-only" mode (invisible for most people). Turnstile only loads when someone starts the form, so it does not slow the page down. The server verifies the token before sending.
+- **Multi-step form on `/quote/`** (7 steps, mobile-first): property type, what they want (multiple), windows (count, size or "not sure", glass type, position), photos, postcode and town, timing (flexible or a date), contact details. Only name, email and privacy consent are required (phone is required if they choose call or text). Progress bar, back/next, focus moves to each step's question, inline errors, thank-you state.
+- **Photos:** up to 5, resized in the browser to 1600 px JPEG before upload (also strips location data). Server limits: 8 MB each, 20 MB total, images only.
+- **Analytics events (no personal data):** `quote_start` on first interaction; `generate_lead` on success with `property_type`, `interests` and `photo_count`.
+- **Pre-filled links:** service pages link to `/quote/?service=<slug>` (pre-ticks the matching option); Homes links to `/quote/?property=home`.
+- **Email to contact@:** subject "Quote request: Name, Town (Property type)", a table of answers, photos attached, and Reply-To set to the customer.
+- **Contact page** (`/contact/`) with quote, phone and email options, service area and company details. Menu: "FAQ" replaced by "Contact" (FAQs remain on the home and service pages).
+- **Privacy policy** rewritten for UK GDPR: quote form data and lawful basis, Turnstile, hosting, processors (Cloudflare, Resend, Google Workspace), retention, rights, ICO. Cookies and analytics section to be completed with the consent banner.
+- **Mobile bar** on the quote page offers "Call" instead of a link back to the form.
+- **Turnstile keys:** the real site key is the default; local builds use the test key from `.env.local`. Local testing: `npm run dev:functions` (see README).
+- **Tested locally with Cloudflare's runtime (wrangler):** validation errors (name, email, consent, phone when call or text is chosen), missing Turnstile token rejected, honeypot silently accepted, valid submission with photos (dry run), GET rejected. In the browser: pre-fill, step navigation, `quote_start` once, photo resize (a non-image was rejected), inline errors with focus, successful submit, thank-you state and `generate_lead`.
+- **Lighthouse (mobile):** `/quote/`, `/contact/`, `/privacy/` and a service page all 100 / 100 / 100 / 100; home 99 to 100.
+
 ## 2026-10-12: Area pages
 
 - Area pages for Merseyside, Cheshire and Flintshire from one template (`src/pages/areas/[slug].astro`, content in `src/data/areas.ts`), plus an `/areas/` overview.
@@ -63,4 +79,8 @@ A short dated entry for every change, newest first. Open issues are at the botto
 - **Film samples.** If you carry 3M sample swatches to surveys, tell us and the copy can say so (it currently only says "ask us about samples").
 - **Service copy review.** Please read the service pages for anything you don't offer or would describe differently (for example edge attachment for security film, custom logos, fitting on conservatory roofs).
 - **Area copy review.** Check the town lists and local notes on the area pages, and tell us about any towns you would rather not list or want to add.
-- **Legal pages** are interim drafts. Full UK GDPR privacy policy and terms come with the form and analytics work.
+- **Quote form go-live checklist:** Resend domain verified; `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY` added in Cloudflare Pages for Production and Preview; send a real test from the preview URL and check it arrives (and isn't in spam).
+- **Privacy policy:** draft. Confirm the retention periods (12 months for enquiries that don't go ahead, 6 years for customers) and add the ICO registration number once registered. Cookies and analytics section to be completed with the consent banner.
+- **Terms** are still the interim version. Full website and quote terms to follow.
+- **Google Workspace email authentication:** the domain has no SPF or DKIM record for Google, so emails you send from contact@ are more likely to go to spam. Add an SPF TXT record (`v=spf1 include:_spf.google.com ~all`) and turn on DKIM in Google Admin.
+- **Optional:** automatic confirmation email to the customer after they submit the form.

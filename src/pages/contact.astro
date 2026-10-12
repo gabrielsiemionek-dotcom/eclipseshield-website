@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { breadcrumbSchema } from '../lib/schema';
+import { areas, areaHref } from '../data/areas';
+import { site, telHref } from '../config/site';
+
+const crumbs = [
+  { href: '/', label: 'Home' },
+  { href: '/contact/', label: 'Contact' },
+];
+---
+
+<BaseLayout
+  title="Contact Us"
+  description={`Contact Eclipse Shield for window film in Cheshire, Merseyside and Flintshire. Call ${site.phone}, email ${site.email} or request a free quote online.`}
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    heading="Contact Eclipse Shield"
+    eyebrow="Get in touch"
+    intro="The quickest way to a price is our quote form, especially with a few photos. You can also call or email us."
+    crumbs={crumbs}
+  />
+
+  <section class="section">
+    <div class="wrap contact-grid">
+      <article class="card contact-card contact-card--primary">
+        <div class="icon-badge"><Icon name="message" /></div>
+        <h2>Request a free quote</h2>
+        <p>Answer a few quick questions and add photos. It takes about two minutes, and we reply the same day.</p>
+        <a class="btn btn--gold" href="/quote/">Get a free quote <Icon name="arrow" /></a>
+      </article>
+
+      {
+        site.phone && (
+          <article class="card contact-card">
+            <div class="icon-badge">
+              <Icon name="phone" />
+            </div>
+            <h2>Call us</h2>
+            <p>{site.hours}.</p>
+            <a class="contact-card__big" href={telHref(site.phone)}>
+              {site.phone}
+            </a>
+          </article>
+        )
+      }
+
+      <article class="card contact-card">
+        <div class="icon-badge"><Icon name="mail" /></div>
+        <h2>Email us</h2>
+        <p>Send details and photos of your windows, and we’ll reply the same day.</p>
+        <a class="contact-card__big" href={`mailto:${site.email}`}>{site.email}</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="area-title">
+    <div class="wrap area">
+      <div>
+        <p class="eyebrow">Where we work</p>
+        <h2 id="area-title">Based in {site.base}</h2>
+        <p class="lead">{site.serviceAreaLine}.</p>
+        <p>
+          We travel to you, so there’s no showroom to visit. Surveys are free within {site.freeSurveyRadiusMiles} miles
+          of {site.base}.
+        </p>
+      </div>
+      <ul class="area__links">
+        {
+          areas.map((a) => (
+            <li>
+              <a class="btn btn--outline" href={areaHref(a.slug)}>
+                <Icon name="pin" />
+                {a.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="company-title">
+    <div class="wrap">
+      <h2 id="company-title" class="company-title">Company details</h2>
+      <p class="company">
+        {site.legalName}. Registered in {site.registeredIn}, company number {site.companyNumber}.
+        {site.registeredOffice && <>Registered office: {site.registeredOffice}.</>}
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+  .contact-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .contact-card h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.4rem;
+  }
+  .contact-card p {
+    color: var(--text-2);
+    flex: 1;
+  }
+  .contact-card--primary {
+    background: var(--black);
+    border-color: var(--black);
+    color: var(--silver);
+  }
+  .contact-card--primary h2 {
+    color: var(--paper);
+  }
+  .contact-card--primary p {
+    color: var(--silver);
+  }
+  .contact-card--primary .icon-badge {
+    background: var(--graphite);
+  }
+  .contact-card__big {
+    font-size: 1.2rem;
+    font-weight: 750;
+    word-break: break-word;
+  }
+  .area {
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .area__links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .company-title {
+    font-size: 1.2rem;
+  }
+  .company {
+    color: var(--text-2);
+    margin: 0;
+  }
+  @media (min-width: 62rem) {
+    .area {
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 4rem;
+    }
+  }
+</style>

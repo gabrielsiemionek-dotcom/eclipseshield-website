@@ -36,6 +36,7 @@ const crumbs = [
   { href: '/services/', label: 'Services' },
   { href: serviceHref(s.slug), label: s.title },
 ];
+const quoteHref = `/quote/?service=${s.slug}`;
 const related = s.related.map(getService).filter((r): r is ServiceContent => Boolean(r));
 ---
 
@@ -44,7 +45,7 @@ const related = s.related.map(getService).filter((r): r is ServiceContent => Boo
   description={s.metaDescription}
   schema={[serviceSchema(s), breadcrumbSchema(crumbs), faqSchema(s.faqs)]}
 >
-  <PageHero heading={s.h1} eyebrow="Window film services" intro={s.intro} crumbs={crumbs} ctas>
+  <PageHero heading={s.h1} eyebrow="Window film services" intro={s.intro} crumbs={crumbs} ctas quoteHref={quoteHref}>
     {
       photo ? (
         <Picture
@@ -159,7 +160,7 @@ const related = s.related.map(getService).filter((r): r is ServiceContent => Boo
     </div>
   </section>
 
-  <CtaBand title={`Get a free quote for ${s.title.toLowerCase()}`} />
+  <CtaBand title={`Get a free quote for ${s.title.toLowerCase()}`} quoteHref={quoteHref} />
 </BaseLayout>
 
 <style>

@@ -10,8 +10,9 @@ interface Props {
   intro?: string;
   crumbs?: { href: string; label: string }[];
   ctas?: boolean;
+  quoteHref?: string;
 }
-const { heading, eyebrow, intro, crumbs, ctas = false } = Astro.props;
+const { heading, eyebrow, intro, crumbs, ctas = false, quoteHref = '/quote/' } = Astro.props;
 const hasMedia = Astro.slots.has('media');
 ---
 
@@ -25,7 +26,7 @@ const hasMedia = Astro.slots.has('media');
       {
         ctas && (
           <div class="btn-row">
-            <a class="btn btn--gold" href="/quote/">
+            <a class="btn btn--gold" href={quoteHref}>
               Get a free quote
               <Icon name="arrow" />
             </a>

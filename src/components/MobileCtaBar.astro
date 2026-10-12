@@ -1,20 +1,35 @@
 ---
 import Icon from './Icon.astro';
 import { site, telHref } from '../config/site';
+
+// On the quote page itself, offer a call instead of a link back to the form.
+const onQuotePage = Astro.url.pathname.startsWith('/quote/');
 ---
 
 <div class="mobile-cta">
-  <a class="btn btn--gold mobile-cta__quote" href="/quote/">Get a free quote</a>
   {
-    site.phone ? (
-      <a class="mobile-cta__icon" href={telHref(site.phone)}>
-        <Icon name="phone" label={`Call ${site.phone}`} />
+    onQuotePage && site.phone ? (
+      <a class="btn btn--ghost mobile-cta__main" href={telHref(site.phone)}>
+        <Icon name="phone" />
+        Prefer to talk? Call {site.phone}
       </a>
     ) : (
-      <a class="mobile-cta__icon" href={`mailto:${site.email}`}>
-        <Icon name="mail" label={`Email ${site.email}`} />
+      <a class="btn btn--gold mobile-cta__main" href="/quote/">
+        Get a free quote
       </a>
     )
+  }
+  {
+    !onQuotePage &&
+      (site.phone ? (
+        <a class="mobile-cta__icon" href={telHref(site.phone)}>
+          <Icon name="phone" label={`Call ${site.phone}`} />
+        </a>
+      ) : (
+        <a class="mobile-cta__icon" href={`mailto:${site.email}`}>
+          <Icon name="mail" label={`Email ${site.email}`} />
+        </a>
+      ))
   }
 </div>
 
@@ -29,7 +44,7 @@ import { site, telHref } from '../config/site';
     background: rgb(10 10 11 / 0.97);
     border-top: 1px solid rgb(201 161 74 / 0.25);
   }
-  .mobile-cta__quote {
+  .mobile-cta__main {
     flex: 1;
   }
   .mobile-cta__icon {

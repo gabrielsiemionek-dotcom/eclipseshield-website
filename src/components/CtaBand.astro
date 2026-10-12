@@ -5,10 +5,13 @@ import { site, telHref } from '../config/site';
 interface Props {
   title?: string;
   text?: string;
+  /** Quote link, e.g. with ?service=<slug> so the form pre-ticks the right option. */
+  quoteHref?: string;
 }
 const {
   title = 'Get a free, no-obligation quote',
   text = 'Tell us about your windows. Add photos if you have them, and we will reply the same day.',
+  quoteHref = '/quote/',
 } = Astro.props;
 ---
 
@@ -19,7 +22,7 @@ const {
       <p>{text}</p>
     </div>
     <div class="btn-row">
-      <a class="btn btn--gold" href="/quote/">
+      <a class="btn btn--gold" href={quoteHref}>
         Get a free quote
         <Icon name="arrow" />
       </a>
