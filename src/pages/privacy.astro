@@ -1,42 +1,107 @@
 ---
-// Interim notice. Replaced by the full UK GDPR privacy policy when the quote form and analytics are added.
+// Privacy policy (UK GDPR). DRAFT: to be reviewed by the business before launch.
+// Cookies and analytics sections are completed when the consent banner and GA4 are added.
 import PageLayout from '../layouts/PageLayout.astro';
 import { site } from '../config/site';
+
+const updated = '13 October 2026';
+const mail = `mailto:${site.email}`;
 ---
 
 <PageLayout
   title="Privacy Policy"
-  description="How Eclipse Shield Ltd handles your personal information."
+  description="How Eclipse Shield Ltd collects, uses and protects your personal information, including quote requests made through this website."
   eyebrow="Legal"
   heading="Privacy policy"
-  intro="Draft: last updated October 2026."
+  intro={`Last updated ${updated}.`}
 >
   <h2>Who we are</h2>
   <p>
-    This website is run by {site.legalName} ("we", "us"), a window film company based in {site.base}, registered in {site.registeredIn} with company number {site.companyNumber}. You can contact us
-    at <a href={`mailto:${site.email}`}>{site.email}</a>.
+    {site.legalName} ("Eclipse Shield", "we", "us") is a window film company based in {site.base}, registered in
+    {' '}{site.registeredIn} with company number {site.companyNumber}. We are the data controller for the personal
+    information described in this policy.
+  </p>
+  <p>Contact us about privacy at <a href={mail}>{site.email}</a>.</p>
+
+  <h2>What we collect and why</h2>
+
+  <h3>Quote requests</h3>
+  <p>When you use our quote form, we collect the details you choose to give us:</p>
+  <ul>
+    <li>your name, email address, phone number and preferred contact method</li>
+    <li>details about the property and windows, what you need, and when</li>
+    <li>your postcode and town</li>
+    <li>photos of your windows, and any notes you add</li>
+  </ul>
+  <p>
+    We use this information to reply to you, prepare a quote, arrange a survey and, if you go ahead, carry out the
+    work. Our lawful basis is that you have asked us to take these steps before entering into a contract with us. If you
+    become a customer, we keep records needed to provide the service and meet our legal obligations, such as tax and
+    accounting.
+  </p>
+  <p>
+    Photos are resized on your device before they are sent, which also removes hidden location data. Please avoid
+    including people or personal documents in your photos.
   </p>
 
-  <h2>What this website collects</h2>
+  <h3>Emails and phone calls</h3>
   <p>
-    At the moment this website does not use analytics or advertising cookies, and it has no online forms. If you email
-    or call us, we use the details you give us (such as your name, contact details, address and photos of your windows)
-    only to answer your enquiry, prepare a quote and carry out any work you ask us to do.
+    If you email or call us, we use your details to answer your enquiry and, if you ask us to, to provide a quote or
+    carry out work.
   </p>
+
+  <h3>Spam protection</h3>
   <p>
-    Our website host, Cloudflare, processes basic technical data such as IP addresses to deliver the site and protect it
-    from attacks.
+    Our quote form uses Cloudflare Turnstile to check that submissions come from people rather than automated programs.
+    Turnstile processes technical information such as your IP address and browser details for this purpose. Our lawful
+    basis is our legitimate interest in keeping the form secure and free from spam.
   </p>
+
+  <h3>Website hosting and security</h3>
+  <p>
+    Our website is hosted by Cloudflare, which processes technical data such as IP addresses to deliver pages and protect
+    the site from attacks.
+  </p>
+
+  <h3>Cookies and analytics</h3>
+  <p>
+    We do not currently use analytics or advertising cookies. If we add them, we will only use them with your consent,
+    and we will update this policy first.
+  </p>
+
+  <h2>Who we share your information with</h2>
+  <p>We do not sell your information. We use these service providers to run our business:</p>
+  <ul>
+    <li><strong>Cloudflare</strong>: website hosting, security and spam protection</li>
+    <li><strong>Resend</strong>: delivers quote requests from the website to our inbox</li>
+    <li><strong>Google Workspace</strong>: our business email, where your enquiry is stored</li>
+  </ul>
+  <p>
+    These providers act on our instructions. Some may process data outside the UK. Where they do, we rely on safeguards
+    recognised under UK data protection law, such as the UK–US Data Bridge or standard contractual clauses.
+  </p>
+
+  <h2>How long we keep it</h2>
+  <ul>
+    <li>Enquiries that don’t lead to work: deleted within 12 months of our last contact.</li>
+    <li>Customer records: kept for 6 years after the job, to meet tax and accounting requirements.</li>
+  </ul>
+  <p>The website itself does not store quote requests. They are sent straight to our email.</p>
 
   <h2>Your rights</h2>
+  <p>Under UK data protection law you have the right to:</p>
+  <ul>
+    <li>ask for a copy of the information we hold about you</li>
+    <li>ask us to correct or delete it</li>
+    <li>object to or restrict how we use it</li>
+    <li>ask us to transfer it to you or another organisation, where this applies</li>
+  </ul>
   <p>
-    You can ask us for a copy of the information we hold about you, or ask us to correct or delete it, by emailing
-    <a href={`mailto:${site.email}`}>{site.email}</a>. You can also complain to the Information Commissioner’s Office
-    (<a href="https://ico.org.uk/make-a-complaint/">ico.org.uk</a>).
+    Email <a href={mail}>{site.email}</a> to use any of these rights. We will reply within one month. If you are unhappy
+    with how we handle your information, you can complain to the Information Commissioner’s Office at
+    <a href="https://ico.org.uk/make-a-complaint/">ico.org.uk</a>.
   </p>
 
-  <p>
-    <em>A full privacy policy covering the quote form, analytics and cookie choices will replace this page before those
-      features go live.</em>
-  </p>
+  <h2>Changes to this policy</h2>
+  <p>We will update this page if anything changes. The date at the top shows when it was last updated.</p>
 </PageLayout>

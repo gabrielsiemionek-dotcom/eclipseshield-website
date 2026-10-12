@@ -1,47 +1,127 @@
 ---
-// Temporary page until the multi-step quote form is built.
-import PageLayout from '../layouts/PageLayout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import QuoteForm from '../components/QuoteForm.astro';
 import Icon from '../components/Icon.astro';
+import { breadcrumbSchema } from '../lib/schema';
 import { site, telHref } from '../config/site';
 
-const subject = encodeURIComponent('Free quote request');
-const body = encodeURIComponent(
-  [
-    'Property type (home / shop / office / other):',
-    'What you need (privacy, heat, frosted, UV, safety, not sure):',
-    'Roughly how many windows:',
-    'Postcode and town:',
-    'Best way to contact you:',
-    '',
-    'Photos of the windows are very helpful. Attach a few if you can.',
-  ].join('\n'),
-);
+const crumbs = [
+  { href: '/', label: 'Home' },
+  { href: '/quote/', label: 'Free quote' },
+];
 ---
 
-<PageLayout
+<BaseLayout
   title="Get a Free Window Film Quote"
-  description="Request a free, no-obligation window film quote from Eclipse Shield. Based in Bromborough, covering Cheshire, Merseyside and Flintshire."
-  eyebrow="Free quote"
-  heading="Get a free, no-obligation quote"
-  intro="Tell us a little about your windows and we will reply the same day."
+  description={`Request a free, no-obligation window film quote from Eclipse Shield. Add photos of your windows and we reply the same day. ${site.serviceAreaLine}.`}
+  schema={[breadcrumbSchema(crumbs)]}
 >
-  <p>
-    Our online quote form is on its way. Until it is ready, send us an email with a few details and some photos of the
-    windows, and we will come back to you with a quote or arrange a free survey (within {site.freeSurveyRadiusMiles}
-    miles of {site.base}).
-  </p>
-  <div class="btn-row">
-    <a class="btn btn--dark" href={`mailto:${site.email}?subject=${subject}&body=${body}`}>
-      <Icon name="mail" />
-      Email {site.email}
-    </a>
-    {
-      site.phone && (
-        <a class="btn btn--outline" href={telHref(site.phone)}>
-          <Icon name="phone" />
-          Call {site.phone}
-        </a>
-      )
+  <PageHero
+    heading="Get a free, no-obligation quote"
+    eyebrow="Free quote"
+    intro="Answer a few quick questions and add photos if you have them. It takes about two minutes, and we reply the same day."
+    crumbs={crumbs}
+  />
+
+  <section class="section quote-section">
+    <div class="wrap quote-layout">
+      <div class="quote-layout__form">
+        <QuoteForm />
+      </div>
+
+      <aside class="quote-aside" aria-labelledby="aside-title">
+        <h2 id="aside-title">What happens next</h2>
+        <ol class="quote-aside__steps">
+          <li>We read your request and photos, and reply the same day.</li>
+          <li>
+            We arrange a free survey (within {site.freeSurveyRadiusMiles} miles of {site.base}) or quote from your
+            photos.
+          </li>
+          <li>You get a clear written quote, with no obligation.</li>
+        </ol>
+
+        <h2>Prefer to talk?</h2>
+        <ul class="quote-aside__contact">
+          {
+            site.phone && (
+              <li>
+                <Icon name="phone" />
+                <a href={telHref(site.phone)}>{site.phone}</a>
+              </li>
+            )
+          }
+          <li>
+            <Icon name="mail" />
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          <li>
+            <Icon name="clock" />
+            <span>{site.hours}</span>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .quote-section {
+    background: var(--mist);
+    padding-top: clamp(1.5rem, 4vw, 3rem);
+  }
+  .quote-layout {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+  .quote-layout__form {
+    min-width: 0;
+  }
+  .quote-aside h2 {
+    font-size: 1.2rem;
+  }
+  .quote-aside h2 + * {
+    margin-bottom: 2rem;
+  }
+  .quote-aside__steps {
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.6rem;
+    color: var(--text-2);
+  }
+  .quote-aside__steps li::marker {
+    color: var(--gold-deep);
+    font-weight: 800;
+  }
+  .quote-aside__contact {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+  .quote-aside__contact li {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .quote-aside__contact :global(svg) {
+    width: 1.2rem;
+    height: 1.2rem;
+    color: var(--gold-deep);
+    flex: none;
+  }
+  .quote-aside__contact a {
+    font-weight: 700;
+  }
+  @media (min-width: 62rem) {
+    .quote-layout {
+      grid-template-columns: minmax(0, 1fr) 18rem;
+      gap: 3rem;
     }
-  </div>
-</PageLayout>
+    .quote-aside {
+      position: sticky;
+      top: 6.5rem;
+    }
+  }
+</style>

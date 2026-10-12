@@ -21,6 +21,9 @@ export const site = {
   hours: 'Open 7 days a week',
   filmBrand: '3M',
   freeSurveyRadiusMiles: 20,
+  // Public Turnstile site key (safe to publish). For local testing, set PUBLIC_TURNSTILE_SITE_KEY to
+  // Cloudflare's test key 1x00000000000000000000AA in .env.local (see .env.example).
+  turnstileSiteKey: (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined) || '0x4AAAAAAFUbwIV65ZHcvXtg',
 } as const;
 
 export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, '').replace(/^0/, '+44')}`;
@@ -30,5 +33,5 @@ export const nav = [
   { href: '/homes/', label: 'Homes' },
   { href: '/businesses/', label: 'Businesses' },
   { href: '/areas/', label: 'Areas' },
-  { href: '/#faq', label: 'FAQ' },
+  { href: '/contact/', label: 'Contact' },
 ];

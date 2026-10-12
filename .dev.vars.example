@@ -1,0 +1,7 @@
+# Copy to .dev.vars for local testing with `npm run dev:functions` (never commit .dev.vars).
+# Cloudflare Turnstile test secret: always passes (pairs with the default test site key).
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+# Skip sending and just log a summary. Remove and set RESEND_API_KEY to send real test emails.
+EMAIL_DRY_RUN=1
+# RESEND_API_KEY=
+# LEAD_TO=you@example.com
