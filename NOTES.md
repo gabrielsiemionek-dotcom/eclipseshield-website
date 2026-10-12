@@ -2,6 +2,10 @@
 
 A short dated entry for every change, newest first. Open issues are at the bottom.
 
+## 2026-10-12: Cloudflare Pages connected
+
+- Repo connected to Cloudflare Pages (production branch `main`, preset Astro, build `npm run build`, output `dist`). Pull requests get preview URLs.
+
 ## 2026-10-11: Phone number and company details
 
 - Added the phone number (07592 196929). Call links now show in the header (wide screens), mobile quote bar, call-to-action band and quote page.
