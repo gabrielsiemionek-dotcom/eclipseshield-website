@@ -238,6 +238,7 @@ const steps = ['Property', 'What you need', 'Windows', 'Photos', 'Location', 'Ti
         <p class="qf__error" id="qf-consent-error" hidden></p>
       </div>
 
+      <p class="qf__ts-hint" data-turnstile-hint hidden>Please tick the box below to confirm you’re human.</p>
       <div class="qf__turnstile" data-turnstile></div>
     </fieldset>
 
@@ -452,6 +453,8 @@ const steps = ['Property', 'What you need', 'Windows', 'Photos', 'Location', 'Ti
     // on the last step, so its token (valid for 5 minutes) is fresh when the form is sent.
     let wantRender = false;
     let turnstileError = '';
+    let needsTick = false;
+    const tsHint = $<HTMLElement>('[data-turnstile-hint]');
     function renderTurnstile() {
       wantRender = true;
       if (!w.turnstile) return loadTurnstile();
@@ -464,16 +467,29 @@ const steps = ['Property', 'What you need', 'Windows', 'Photos', 'Location', 'Ti
         'error-callback': (code: string) => {
           turnstileError = String(code);
         },
+        // Cloudflare occasionally wants a tick in the box. Make that obvious.
+        'before-interactive-callback': () => {
+          needsTick = true;
+          tsHint.hidden = false;
+          $<HTMLElement>('[data-turnstile]').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        },
+        'after-interactive-callback': () => {
+          needsTick = false;
+          tsHint.hidden = true;
+        },
       });
     }
     const resetTurnstile = () => {
       if (w.turnstile && turnstileId !== undefined) w.turnstile.reset(turnstileId);
+      needsTick = false;
+      tsHint.hidden = true;
     };
     // Wait briefly for a fresh token instead of failing straight away.
     const getToken = async (timeoutMs = 8000) => {
       renderTurnstile();
       const start = Date.now();
       while (Date.now() - start < timeoutMs) {
+        if (needsTick) return '';
         if (w.turnstile && turnstileId !== undefined) {
           if (w.turnstile.isExpired(turnstileId)) resetTurnstile();
           const t = w.turnstile.getResponse(turnstileId);
@@ -547,9 +563,12 @@ const steps = ['Property', 'What you need', 'Windows', 'Photos', 'Location', 'Ti
 
       const token = await getToken();
       if (!token) {
-        formError.textContent = turnstileError
-          ? `Our spam check couldn’t load (code ${turnstileError}). Please try again, or call or email us.`
-          : 'Our spam check is taking longer than usual. Please try again in a few seconds.';
+        formError.textContent = needsTick
+          ? 'Please tick the “Verify you are human” box above, then press Send again.'
+          : turnstileError
+            ? `Our spam check couldn’t load (code ${turnstileError}). Please try again, or call or email us.`
+            : 'Our spam check is taking longer than usual. Please try again in a few seconds.';
+        if (needsTick) $<HTMLElement>('[data-turnstile]').scrollIntoView({ behavior: 'smooth', block: 'center' });
         formError.hidden = false;
         submitBtn.disabled = false;
         submitBtn.textContent = 'Send my quote request';
@@ -874,6 +893,11 @@ const steps = ['Property', 'What you need', 'Windows', 'Photos', 'Location', 'Ti
   }
   .qf__turnstile {
     margin-top: 1.25rem;
+  }
+  .qf__ts-hint {
+    margin: 1.25rem 0 0;
+    font-weight: 700;
+    color: var(--gold-deep);
   }
   .qf__nav {
     display: flex;
