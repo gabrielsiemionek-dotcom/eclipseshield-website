@@ -2,6 +2,14 @@
 
 A short dated entry for every change, newest first. Open issues are at the bottom.
 
+## 2026-10-12: Quote form working end to end, mobile tweaks
+
+- First real test lead received at contact@ from a phone (with 3 photos). Earlier failures were configuration: the Turnstile secret came from a different widget, then the Turnstile site key had been pasted into `RESEND_API_KEY` on Preview. Every failure message now ends with a code (Turnstile codes, `resend-<status>` plus error type, `config-missing`, `network`) so problems like this are quick to find.
+- Removed the fixed mobile call bar from the quote page (it got in the way while typing; the page already shows the phone number). Page padding for the bar now only applies where the bar is shown.
+- Fixed the date field overflowing the card on iPhone (Safari gives date inputs a fixed native width).
+- UK postcodes are tidied in the email ("ch655by" becomes "CH65 5BY").
+- Lighthouse (mobile): `/quote/` 100 / 100 / 100 / 100; home 97 to 98 performance (110 ms blocking time while the local Cloudflare runtime was also running), 100 for the rest.
+
 ## 2026-10-12: Quote form spam check fixes (after phone testing)
 
 - Real-phone tests failed the Turnstile check. Two causes: the token (valid 5 minutes, single use) could expire while filling in the form, and when Cloudflare asked for a "Verify you are human" tick it appeared late (only on the last step) and sending didn't continue after ticking.

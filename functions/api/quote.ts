@@ -128,7 +128,11 @@ export const onRequestPost = async ({ request, env }: Ctx) => {
   const sizeNotSure = text(fd, 'window_size_not_sure') === 'yes';
   const types = list(fd, 'window_types', windowTypes);
   const where = list(fd, 'positions', positions);
-  const postcode = text(fd, 'postcode', 12).toUpperCase();
+  // Tidy UK postcodes: "ch655by" -> "CH65 5BY".
+  const rawPostcode = text(fd, 'postcode', 12).toUpperCase().replace(/\s+/g, '');
+  const postcode = /^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/.test(rawPostcode)
+    ? `${rawPostcode.slice(0, -3)} ${rawPostcode.slice(-3)}`
+    : text(fd, 'postcode', 12).toUpperCase();
   const town = text(fd, 'town', 80);
   const timing = text(fd, 'timing', 20);
   const date = text(fd, 'date', 20);

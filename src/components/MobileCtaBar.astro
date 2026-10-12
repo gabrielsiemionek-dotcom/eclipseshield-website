@@ -2,26 +2,17 @@
 import Icon from './Icon.astro';
 import { site, telHref } from '../config/site';
 
-// On the quote page itself, offer a call instead of a link back to the form.
-const onQuotePage = Astro.url.pathname.startsWith('/quote/');
+// Not shown on the quote page: it gets in the way while typing, and the page already shows the phone number.
+const show = !Astro.url.pathname.startsWith('/quote/');
 ---
 
-<div class="mobile-cta">
-  {
-    onQuotePage && site.phone ? (
-      <a class="btn btn--ghost mobile-cta__main" href={telHref(site.phone)}>
-        <Icon name="phone" />
-        Prefer to talk? Call {site.phone}
-      </a>
-    ) : (
+{
+  show && (
+    <div class="mobile-cta">
       <a class="btn btn--gold mobile-cta__main" href="/quote/">
         Get a free quote
       </a>
-    )
-  }
-  {
-    !onQuotePage &&
-      (site.phone ? (
+      {site.phone ? (
         <a class="mobile-cta__icon" href={telHref(site.phone)}>
           <Icon name="phone" label={`Call ${site.phone}`} />
         </a>
@@ -29,9 +20,10 @@ const onQuotePage = Astro.url.pathname.startsWith('/quote/');
         <a class="mobile-cta__icon" href={`mailto:${site.email}`}>
           <Icon name="mail" label={`Email ${site.email}`} />
         </a>
-      ))
-  }
-</div>
+      )}
+    </div>
+  )
+}
 
 <style>
   .mobile-cta {
