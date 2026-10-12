@@ -5,6 +5,7 @@ A short dated entry for every change, newest first. Open issues are at the botto
 ## 2026-10-12: Cloudflare Pages connected
 
 - Repo connected to Cloudflare Pages (production branch `main`, preset Astro, build `npm run build`, output `dist`). Pull requests get preview URLs.
+- Fixed the first Cloudflare build: `npm ci` failed because the lock file was written by npm 11 (local Node 24) and Cloudflare uses npm 10 (Node 22), which also wants `@emnapi/core` and `@emnapi/runtime` listed. Lock file regenerated with npm 10; checked with both npm 10 and 11. If dependencies change, run `npx npm@10 install --package-lock-only` before committing.
 
 ## 2026-10-11: Phone number and company details
 
