@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import AudiencePage from '../components/AudiencePage.astro';
+import FilmVisual from '../components/FilmVisual.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { breadcrumbSchema, faqSchema } from '../lib/schema';
+import { site } from '../config/site';
+
+const crumbs = [
+  { href: '/', label: 'Home' },
+  { href: '/businesses/', label: 'Businesses' },
+];
+
+const uses = [
+  {
+    title: 'Offices',
+    text: 'Frosted film and bands for meeting rooms and partitions, manifestation for glass doors, and solar film to cut glare on screens.',
+    services: ['frosted-decorative-window-film', 'solar-control-window-film', 'privacy-window-film'],
+  },
+  {
+    title: 'Shops and retail',
+    text: 'UV and solar film to help protect window displays, plus safety, security and anti-graffiti film for shopfronts.',
+    services: ['uv-protection-window-film', 'safety-security-window-film', 'anti-graffiti-film'],
+  },
+  {
+    title: 'Salons, clinics and treatment rooms',
+    text: 'Privacy for ground floor treatment rooms without blocking out the daylight.',
+    services: ['frosted-decorative-window-film', 'privacy-window-film'],
+  },
+  {
+    title: 'Receptions and showrooms',
+    text: 'Keep large glazed areas comfortable and glare-free, and help stop products and furniture fading.',
+    services: ['solar-control-window-film', 'uv-protection-window-film'],
+  },
+  {
+    title: 'Landlords and property managers',
+    text: 'Refresh units between tenants with frosted or privacy film that can be removed and changed later.',
+    services: ['frosted-decorative-window-film', 'privacy-window-film'],
+  },
+  {
+    title: 'Glass doors and partitions',
+    text: 'Make glass clearly visible so people don’t walk into it, and add privacy at the same time.',
+    services: ['frosted-decorative-window-film', 'safety-security-window-film'],
+  },
+];
+
+const reasons = [
+  {
+    title: 'Fitting at times that suit you',
+    text: 'We work seven days a week, so fitting can be arranged around your opening hours to keep disruption down.',
+  },
+  {
+    title: 'Cheaper than replacing glass',
+    text: 'Change how your glass looks and performs without the cost of new glazing.',
+  },
+  {
+    title: 'Easy to update',
+    text: 'Film can be removed and replaced when your layout, branding or tenants change.',
+  },
+  {
+    title: 'Larger projects anywhere in the UK',
+    text: 'We cover Cheshire, Merseyside and Flintshire, and take on larger projects (around £1,000 and up) further afield.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Can you fit film outside our opening hours?',
+    a: 'We work seven days a week, so tell us when suits you and we will do our best to work around your business.',
+  },
+  {
+    q: 'Do you take on projects outside Cheshire, Merseyside and Flintshire?',
+    a: 'Yes, for larger projects (around £1,000 and up). Send us the details and photos and we will confirm by email.',
+  },
+  {
+    q: 'Can you add our logo or a custom design to the glass?',
+    a: 'Send us your artwork and tell us where it will go. We will let you know what is possible and include it in your quote.',
+  },
+  {
+    q: 'Can you quote from photos and measurements?',
+    a: 'Often, yes, especially for simple jobs. For larger or more complex sites we will usually want to visit and check the glass first.',
+  },
+];
+---
+
+<BaseLayout
+  title="Commercial Window Film for Businesses"
+  description={`Commercial window film for offices, shops, salons and clinics: privacy, frosted, manifestation, solar, UV, safety and anti-graffiti. ${site.serviceAreaLine}.`}
+  schema={[breadcrumbSchema(crumbs), faqSchema(faqs)]}
+>
+  <PageHero
+    heading="Window film for businesses"
+    eyebrow="Commercial"
+    intro="Window film for offices, shops, salons, clinics and other workplaces. Add privacy, cut heat and glare, protect your stock and make glass safer, with minimal disruption."
+    crumbs={crumbs}
+    ctas
+  >
+    <FilmVisual slot="media" variant="frosted" />
+  </PageHero>
+
+  <AudiencePage
+    usesTitle="Film for every kind of workplace"
+    usesIntro="Whether it’s one meeting room or a whole shopfront, we’ll recommend the right film for the glass and how you use the space."
+    uses={uses}
+    reasonsTitle="Why businesses choose window film"
+    reasons={reasons}
+    faqs={faqs}
+  />
+
+  <CtaBand title="Get a free quote for your business" />
+</BaseLayout>

@@ -2,6 +2,18 @@
 
 A short dated entry for every change, newest first. Open issues are at the bottom.
 
+## 2026-10-12: Service pages, Homes and Businesses
+
+- Six service pages from one template (, content in ): privacy and one-way mirror, solar and heat control, frosted and decorative, UV and fade protection, safety and security, anti-graffiti. Each has benefits, where it is used, film options, an honest "Good to know" box, FAQs, related services and a quote call to action.
+- Services overview page () with a "start with the problem" guide.
+- Homes () and Businesses () landing pages: room-by-room and workplace-by-workplace uses linking to the right services, why film, what happens at the survey, FAQs.
+- Service, BreadcrumbList and FAQPage structured data; visible breadcrumbs on inner pages.
+- Services without a real photo use a simple illustration of the film effect () until photos are ready. Solar control uses the glass room terrace photo.
+- Navigation now links to Services, Homes and Businesses. Areas and FAQ still point at home page sections.
+- Fixed the header phone icon size and number wrapping.
+- Copy avoids promises not yet confirmed (for example, bringing film samples to surveys).
+- Lighthouse (mobile): home, services, four service pages, homes and businesses all 100 / 100 / 100 / 100 (one run of frosted was 99 performance). Internal link and JSON-LD check: 14 pages, no problems.
+
 ## 2026-10-12: Cloudflare Pages connected
 
 - Repo connected to Cloudflare Pages (production branch `main`, preset Astro, build `npm run build`, output `dist`). Pull requests get preview URLs.
@@ -39,4 +51,6 @@ A short dated entry for every change, newest first. Open issues are at the botto
 - **AI-edited images** in `Web Images` (privacy glass outside, exterior privacy glass) are not used. If they are used later, they must be labelled as illustrations, not real jobs.
 - **Logo files.** A vector (SVG) or high-resolution transparent PNG of the final logo would help for print and future pages.
 - **Domain and email.** The domain is registered through Squarespace. The email provider for `contact@eclipseshield.co.uk` needs confirming before DNS changes (Resend records, custom domain).
+- **Film samples.** If you carry 3M sample swatches to surveys, tell us and the copy can say so (it currently only says "ask us about samples").
+- **Service copy review.** Please read the service pages for anything you don't offer or would describe differently (for example edge attachment for security film, custom logos, fitting on conservatory roofs).
 - **Legal pages** are interim drafts. Full UK GDPR privacy policy and terms come with the form and analytics work.

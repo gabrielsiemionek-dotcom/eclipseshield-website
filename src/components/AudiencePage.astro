@@ -1,0 +1,202 @@
+---
+// Shared body for the Homes and Businesses landing pages.
+import Icon from './Icon.astro';
+import FaqList from './FaqList.astro';
+import { getService, serviceHref, type Faq } from '../data/services';
+import { site } from '../config/site';
+
+interface Props {
+  usesTitle: string;
+  usesIntro: string;
+  uses: { title: string; text: string; services: string[] }[];
+  reasonsTitle: string;
+  reasons: { title: string; text: string }[];
+  faqs: Faq[];
+}
+const { usesTitle, usesIntro, uses, reasonsTitle, reasons, faqs } = Astro.props;
+const titleOf = (slug: string) => getService(slug)?.title ?? slug;
+---
+
+<section class="section" aria-labelledby="uses-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Where film helps</p>
+      <h2 id="uses-title">{usesTitle}</h2>
+      <p class="lead">{usesIntro}</p>
+    </div>
+    <div class="grid grid--3">
+      {
+        uses.map((u) => (
+          <article class="card use">
+            <h3>{u.title}</h3>
+            <p>{u.text}</p>
+            <ul class="use__links">
+              {u.services.map((slug) => (
+                <li>
+                  <a href={serviceHref(slug)}>{titleOf(slug)}</a>
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section section--dark" aria-labelledby="reasons-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Why window film</p>
+      <h2 id="reasons-title">{reasonsTitle}</h2>
+    </div>
+    <ul class="reasons">
+      {
+        reasons.map((r) => (
+          <li>
+            <Icon name="shield" />
+            <div>
+              <h3>{r.title}</h3>
+              <p>{r.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="survey-title">
+  <div class="wrap survey">
+    <div>
+      <p class="eyebrow">What happens next</p>
+      <h2 id="survey-title">Your free survey and quote</h2>
+      <p class="lead">
+        Send us a few details and photos through the quote form. We reply the same day. {`If you’re within ${site.freeSurveyRadiusMiles} miles of ${site.base}, we’ll visit for a free survey.`}
+      </p>
+    </div>
+    <ol class="survey__steps">
+      <li>We check your glass type, so we only recommend films that are compatible with it.</li>
+      <li>We measure up and talk you through the film options.</li>
+      <li>We explain what each film will and won’t do, including any limits.</li>
+      <li>You get a clear written quote, with no obligation.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="section section--mist" aria-labelledby="faq-title">
+  <div class="wrap faq">
+    <div class="section-head">
+      <p class="eyebrow">FAQ</p>
+      <h2 id="faq-title">Common questions</h2>
+    </div>
+    <FaqList faqs={faqs} />
+  </div>
+</section>
+
+<style>
+  .use {
+    display: flex;
+    flex-direction: column;
+  }
+  .use h3 {
+    margin-bottom: 0.4rem;
+  }
+  .use p {
+    color: var(--text-2);
+    flex: 1;
+  }
+  .use__links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .use__links a {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    background: var(--mist);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 650;
+    text-decoration: none;
+  }
+  .use__links a:hover {
+    background: var(--black);
+    color: var(--gold-hi);
+  }
+  .reasons {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.75rem 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  }
+  .reasons li {
+    display: flex;
+    gap: 1rem;
+  }
+  .reasons :global(svg) {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex: none;
+    color: var(--gold);
+    margin-top: 0.1rem;
+  }
+  .reasons h3 {
+    margin-bottom: 0.3rem;
+  }
+  .reasons p {
+    margin: 0;
+  }
+  .survey {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+  .survey__steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: s;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .survey__steps li {
+    counter-increment: s;
+    position: relative;
+    padding: 1rem 1.25rem 1rem 3.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .survey__steps li::before {
+    content: counter(s);
+    position: absolute;
+    left: 1rem;
+    top: 0.9rem;
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    background: var(--black);
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 0.95rem;
+  }
+  .faq {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 62rem) {
+    .survey,
+    .faq {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 4rem;
+    }
+  }
+</style>

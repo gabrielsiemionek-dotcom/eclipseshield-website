@@ -1,0 +1,134 @@
+---
+// Decorative illustration of a window with the effect of each film.
+// Used where we don't have a real job photo yet. Hidden from screen readers.
+interface Props {
+  variant: 'privacy' | 'solar' | 'frosted' | 'uv' | 'safety' | 'graffiti';
+  class?: string;
+}
+const { variant, class: className } = Astro.props;
+const id = `fv-${variant}`;
+---
+
+<svg class:list={['film-visual', className]} viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id={`${id}-sky`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7fa7c9"></stop>
+      <stop offset="1" stop-color="#d9e6ef"></stop>
+    </linearGradient>
+    <linearGradient id={`${id}-mirror`} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e9ecef"></stop>
+      <stop offset="0.45" stop-color="#9aa3ad"></stop>
+      <stop offset="0.55" stop-color="#c9cfd5"></stop>
+      <stop offset="1" stop-color="#6f7882"></stop>
+    </linearGradient>
+    <linearGradient id={`${id}-tint`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a3326" stop-opacity="0.75"></stop>
+      <stop offset="1" stop-color="#1a1712" stop-opacity="0.6"></stop>
+    </linearGradient>
+    <linearGradient id={`${id}-gold`} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8c6a2a"></stop>
+      <stop offset="0.5" stop-color="#e8c97e"></stop>
+      <stop offset="1" stop-color="#b58a35"></stop>
+    </linearGradient>
+    <pattern id={`${id}-frost`} width="6" height="6" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" fill="#f4f6f8" fill-opacity="0.9"></rect>
+      <circle cx="1.5" cy="1.5" r="0.7" fill="#ffffff"></circle>
+      <circle cx="4.5" cy="4" r="0.6" fill="#dfe4e8"></circle>
+    </pattern>
+  </defs>
+
+  <!-- Wall -->
+  <rect width="480" height="360" rx="18" fill="#141518"></rect>
+
+  <!-- Outside view -->
+  <rect x="70" y="40" width="340" height="280" fill={`url(#${id}-sky)`}></rect>
+  <path d="M70 250 Q150 220 230 245 T410 235 V320 H70z" fill="#5f7d5a"></path>
+  <path d="M70 275 Q180 255 260 275 T410 270 V320 H70z" fill="#4b6847"></path>
+
+  {
+    variant === 'privacy' && (
+      <g>
+        <rect x="70" y="40" width="170" height="280" fill={`url(#${id}-mirror)`} />
+        <path d="M95 40 L150 40 L80 140 L70 140 L70 70z" fill="#ffffff" fill-opacity="0.35" />
+        <path d="M70 200 L170 60 L190 60 L80 215z" fill="#ffffff" fill-opacity="0.18" />
+      </g>
+    )
+  }
+  {
+    variant === 'solar' && (
+      <g>
+        <circle cx="380" cy="10" r="60" fill="#f2c76a" fill-opacity="0.35" />
+        <circle cx="380" cy="10" r="30" fill="#ffe7a8" />
+        <rect x="70" y="40" width="340" height="280" fill={`url(#${id}-tint)`} />
+        <g stroke={`url(#${id}-gold)`} stroke-width="5" stroke-linecap="round" fill="none">
+          <path d="M330 60 L300 100 L330 130" />
+          <path d="M370 80 L345 115 L375 140" />
+        </g>
+      </g>
+    )
+  }
+  {
+    variant === 'frosted' && (
+      <g>
+        <rect x="70" y="40" width="340" height="280" fill={`url(#${id}-frost)`} />
+        <rect x="70" y="150" width="340" height="14" fill="#ffffff" fill-opacity="0.95" />
+        <rect x="70" y="172" width="340" height="6" fill="#ffffff" fill-opacity="0.95" />
+      </g>
+    )
+  }
+  {
+    variant === 'uv' && (
+      <g>
+        <circle cx="440" cy="0" r="70" fill="#f2c76a" fill-opacity="0.25" />
+        <g stroke="#8f6fe0" stroke-width="5" stroke-linecap="round" fill="none" stroke-dasharray="2 10">
+          <path d="M470 20 L245 150" />
+          <path d="M470 70 L245 200" />
+          <path d="M470 120 L245 250" />
+        </g>
+        <rect x="236" y="40" width="10" height="280" fill={`url(#${id}-gold)`} />
+        <rect x="110" y="285" width="100" height="35" rx="6" fill="#a0673a" />
+      </g>
+    )
+  }
+  {
+    variant === 'safety' && (
+      <g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" fill="none" stroke-opacity="0.9">
+        <path d="M300 130 L250 60 M300 130 L380 80 M300 130 L400 160 M300 130 L360 230 M300 130 L250 210 M300 130 L200 140" />
+        <path d="M270 100 L320 95 L350 140 L320 180 L265 170 L245 130z" />
+        <path d="M235 75 L370 70 L395 175 L345 245 L225 225 L190 130z" stroke-opacity="0.55" />
+      </g>
+    )
+  }
+  {
+    variant === 'graffiti' && (
+      <g>
+        <path
+          d="M110 120 C140 80 170 160 200 110 S260 90 280 140 S330 190 360 120"
+          stroke="#d0453a"
+          stroke-width="9"
+          stroke-linecap="round"
+          fill="none"
+        />
+        <path d="M130 200 C170 180 190 230 240 200" stroke="#2f6fd6" stroke-width="7" stroke-linecap="round" fill="none" />
+        <path d="M410 320 L410 250 Q380 290 340 320z" fill="#ffffff" fill-opacity="0.9" />
+        <path d="M410 250 Q380 290 340 320" stroke={`url(#${id}-gold)`} stroke-width="3" fill="none" />
+      </g>
+    )
+  }
+
+  <!-- Frame -->
+  <g fill="none" stroke="#2a2c31" stroke-width="14">
+    <rect x="70" y="40" width="340" height="280"></rect>
+    <path d="M240 40 V320"></path>
+  </g>
+  <rect x="58" y="320" width="364" height="14" rx="4" fill="#2a2c31"></rect>
+  <rect x="62" y="33" width="356" height="294" fill="none" stroke={`url(#${id}-gold)`} stroke-width="1.5" rx="2"></rect>
+</svg>
+
+<style>
+  .film-visual {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+  }
+</style>

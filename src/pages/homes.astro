@@ -1,0 +1,116 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import AudiencePage from '../components/AudiencePage.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { breadcrumbSchema, faqSchema } from '../lib/schema';
+import { site } from '../config/site';
+import seaViewPhoto from '../assets/photos/glass-room-sea-view.jpg';
+
+const crumbs = [
+  { href: '/', label: 'Home' },
+  { href: '/homes/', label: 'Homes' },
+];
+
+const uses = [
+  {
+    title: 'Conservatories and glass rooms',
+    text: 'Too hot to sit in on sunny days and too bright to watch TV. Solar film cuts heat and glare, and blocks most UV to help slow fading.',
+    services: ['solar-control-window-film', 'uv-protection-window-film'],
+  },
+  {
+    title: 'Bathrooms and en suites',
+    text: 'Frosted film gives privacy day and night while keeping the room light, with no need for blinds that get damp.',
+    services: ['frosted-decorative-window-film', 'privacy-window-film'],
+  },
+  {
+    title: 'Front doors and hallways',
+    text: 'Frosted or decorative film for glass doors and side panels, and safety film for large or low-level glass.',
+    services: ['frosted-decorative-window-film', 'safety-security-window-film'],
+  },
+  {
+    title: 'Rooms facing the street or neighbours',
+    text: 'Mirror film for daytime privacy with a view out, or frosted film if you need privacy in the evening too.',
+    services: ['privacy-window-film', 'frosted-decorative-window-film'],
+  },
+  {
+    title: 'Loft rooms, roof lights and skylights',
+    text: 'Roof glass lets in a lot of heat. Solar film helps keep loft bedrooms and offices comfortable in summer.',
+    services: ['solar-control-window-film'],
+  },
+  {
+    title: 'Rooms with wooden floors and good furniture',
+    text: 'Clear UV film helps protect floors, sofas, rugs and artwork from fading, with almost no change to the glass.',
+    services: ['uv-protection-window-film', 'solar-control-window-film'],
+  },
+];
+
+const reasons = [
+  { title: 'Keeps your light', text: 'Film works on the glass itself, so rooms stay bright, unlike closing blinds or curtains.' },
+  {
+    title: 'No need to replace glass',
+    text: 'A frosted or solar finish without the cost and mess of new glazing.',
+  },
+  { title: 'Tidy and cord-free', text: 'Nothing to hang, dust or tangle. Film sits flat on the inside of the glass.' },
+  {
+    title: 'Removable',
+    text: 'Film can be removed professionally later, which suits rented homes and changing tastes.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Can window film go on uPVC, aluminium or wooden windows?',
+    a: 'Yes. Film is fitted to the glass, so the frame material does not matter. What matters is the type of glass, which we check before recommending a film.',
+  },
+  {
+    q: 'Will window film affect my window warranty?',
+    a: 'Some double-glazing manufacturers mention window film in their warranty terms. It is worth checking your paperwork, and we always recommend films that are compatible with your glass type.',
+  },
+  {
+    q: 'Do I need to be at home while you fit the film?',
+    a: 'Usually yes, because most films are fitted on the inside of the glass. We will agree a time that suits you.',
+  },
+  {
+    q: 'Can I get film on a rented home?',
+    a: 'Yes, as film can be removed professionally. Ask your landlord first, especially for reflective films that change how the windows look from outside.',
+  },
+];
+---
+
+<BaseLayout
+  title="Window Film for Homes"
+  description={`Home window film for privacy, heat, glare, fading and safety. ${site.filmBrand} film fitted across Cheshire, Merseyside and Flintshire. Free surveys within 20 miles of Bromborough.`}
+  schema={[breadcrumbSchema(crumbs), faqSchema(faqs)]}
+>
+  <PageHero
+    heading="Window film for homes"
+    eyebrow="Residential"
+    intro={`Make rooms cooler, more private and more comfortable without replacing your windows. We fit ${site.filmBrand} window film in homes across Cheshire, Merseyside and Flintshire.`}
+    crumbs={crumbs}
+    ctas
+  >
+    <Picture
+      slot="media"
+      src={seaViewPhoto}
+      alt="A bright glass garden room with dining table and floor-to-ceiling glazing looking over a garden to the sea"
+      formats={['avif', 'webp']}
+      widths={[360, 540, 720, 960]}
+      sizes="(min-width: 32rem) 30rem, calc(100vw - 2rem)"
+      layout="none"
+      priority
+    />
+  </PageHero>
+
+  <AudiencePage
+    usesTitle="Room by room"
+    usesIntro="Most homes have one or two windows that cause most of the problems. Here is where film makes the biggest difference."
+    uses={uses}
+    reasonsTitle="Why film instead of blinds or new glass"
+    reasons={reasons}
+    faqs={faqs}
+  />
+
+  <CtaBand title="Get a free quote for your home" />
+</BaseLayout>

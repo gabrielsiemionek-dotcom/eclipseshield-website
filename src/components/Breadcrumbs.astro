@@ -1,0 +1,45 @@
+---
+// Visible breadcrumb trail. The matching BreadcrumbList JSON-LD comes from breadcrumbSchema().
+interface Props {
+  items: { href: string; label: string }[];
+}
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    {
+      items.map((item, i) => (
+        <li>
+          {i < items.length - 1 ? <a href={item.href}>{item.label}</a> : <span aria-current="page">{item.label}</span>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    padding: 0;
+    margin: 0 0 1.25rem;
+    font-size: 0.9rem;
+    color: var(--silver-dim);
+  }
+  .breadcrumbs li + li::before {
+    content: '/';
+    margin-right: 0.5rem;
+    color: var(--silver-dim);
+  }
+  .breadcrumbs a {
+    color: var(--silver);
+    text-decoration: none;
+  }
+  .breadcrumbs a:hover {
+    color: var(--gold-hi);
+    text-decoration: underline;
+  }
+</style>

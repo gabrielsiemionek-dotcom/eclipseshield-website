@@ -3,21 +3,14 @@ import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import CtaBand from '../components/CtaBand.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import FaqList from '../components/FaqList.astro';
+import { faqSchema } from '../lib/schema';
 import { services } from '../data/services';
 import { homeFaqs } from '../data/faqs';
 import { site } from '../config/site';
 import heroPhoto from '../assets/photos/fitting-glass-room.jpg';
 import seaViewPhoto from '../assets/photos/glass-room-sea-view.jpg';
-
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: homeFaqs.map((f) => ({
-    '@type': 'Question',
-    name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
-  })),
-};
 
 const steps = [
   {
@@ -28,7 +21,7 @@ const steps = [
   {
     icon: 'ruler',
     title: 'Survey or quote',
-    text: `We visit to measure up and show you film samples (free within ${site.freeSurveyRadiusMiles} miles of ${site.base}), or quote from your photos and measurements.`,
+    text: `We visit to measure up and talk through the options (free within ${site.freeSurveyRadiusMiles} miles of ${site.base}), or quote from your photos and measurements.`,
   },
   {
     icon: 'tools',
@@ -64,7 +57,7 @@ const reasons = [
 <BaseLayout
   title="Window Tinting for Homes and Businesses | Eclipse Shield"
   description="Privacy, solar control, frosted, UV, safety and anti-graffiti window film for homes and businesses. Based in Bromborough, covering Cheshire, Merseyside and Flintshire. Free quotes."
-  schema={[faqSchema]}
+  schema={[faqSchema(homeFaqs)]}
 >
   <!-- Hero -->
   <section class="hero on-dark">
@@ -81,7 +74,7 @@ const reasons = [
             Get a free quote
             <Icon name="arrow" />
           </a>
-          <a class="btn btn--ghost" href="#services">See our services</a>
+          <a class="btn btn--ghost" href="/services/">See our services</a>
         </div>
         <ul class="hero__points">
           <li><Icon name="ruler" /> Free surveys within {site.freeSurveyRadiusMiles} miles</li>
@@ -117,15 +110,7 @@ const reasons = [
       </div>
       <div class="grid grid--3">
         {
-          services.map((s) => (
-            <article class="card service-card">
-              <div class="icon-badge">
-                <Icon name={s.icon} />
-              </div>
-              <h3>{s.title}</h3>
-              <p>{s.short}</p>
-            </article>
-          ))
+          services.map((s) => <ServiceCard service={s} />)
         }
       </div>
     </div>
@@ -149,7 +134,7 @@ const reasons = [
             <li>Help protect floors and furniture from fading</li>
             <li>Safety film for large panes and glass doors</li>
           </ul>
-          <a class="btn btn--outline" href="/quote/">Get a free quote for your home</a>
+          <a class="btn btn--outline" href="/homes/">Window film for homes</a>
         </article>
         <article class="card audience-card">
           <div class="icon-badge"><Icon name="building" /></div>
@@ -161,7 +146,7 @@ const reasons = [
             <li>UV film to help protect window displays and stock</li>
             <li>Safety, security and anti-graffiti film for shopfronts</li>
           </ul>
-          <a class="btn btn--outline" href="/quote/">Get a free quote for your business</a>
+          <a class="btn btn--outline" href="/businesses/">Window film for businesses</a>
         </article>
       </div>
     </div>
@@ -280,16 +265,7 @@ const reasons = [
         <h2 id="faq-title">Questions we get asked a lot</h2>
         <p class="lead">Can’t see your question? <a href={`mailto:${site.email}`}>Email us</a> and we will help.</p>
       </div>
-      <div class="faq__list">
-        {
-          homeFaqs.map((f) => (
-            <details class="faq__item">
-              <summary>{f.q}</summary>
-              <p>{f.a}</p>
-            </details>
-          ))
-        }
-      </div>
+      <FaqList faqs={homeFaqs} />
     </div>
   </section>
 
@@ -363,14 +339,6 @@ const reasons = [
     .hero__grid {
       grid-template-columns: 1.15fr 0.85fr;
     }
-  }
-
-  /* Services */
-  .service-card h3 {
-    margin-bottom: 0.5rem;
-  }
-  .service-card p {
-    color: var(--text-2);
   }
 
   /* Audience */
@@ -524,47 +492,6 @@ const reasons = [
   .faq {
     display: grid;
     gap: 1rem;
-  }
-  .faq__list {
-    border-top: 1px solid var(--line);
-  }
-  .faq__item {
-    border-bottom: 1px solid var(--line);
-  }
-  .faq__item summary {
-    list-style: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.25rem 0;
-    font-weight: 700;
-    font-size: 1.08rem;
-  }
-  .faq__item summary::-webkit-details-marker {
-    display: none;
-  }
-  .faq__item summary::after {
-    content: '+';
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: var(--mist);
-    color: var(--gold-deep);
-    font-size: 1.3rem;
-    font-weight: 500;
-  }
-  .faq__item[open] summary::after {
-    content: '−';
-  }
-  .faq__item p {
-    color: var(--text-2);
-    padding-right: 3rem;
-    margin-bottom: 1.25rem;
   }
   @media (min-width: 62rem) {
     .faq {
