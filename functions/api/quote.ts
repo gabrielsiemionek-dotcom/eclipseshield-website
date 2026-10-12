@@ -96,7 +96,7 @@ export const onRequestPost = async ({ request, env }: Ctx) => {
 
   if (!env.TURNSTILE_SECRET_KEY || (!env.RESEND_API_KEY && env.EMAIL_DRY_RUN !== '1')) {
     console.error('quote: missing configuration');
-    return fail(503, 'Our form is temporarily unavailable. Please call or email us instead.');
+    return fail(503, 'Our form is temporarily unavailable. Please call or email us instead.', undefined, ['config-missing']);
   }
 
   const token = text(fd, 'cf-turnstile-response', 4096);
@@ -211,13 +211,15 @@ ${filled
     });
   } catch {
     console.error('quote: Resend request failed');
-    return fail(502, 'Sorry, your request didn’t send. Please try again, or call or email us.');
+    return fail(502, 'Sorry, your request didn’t send. Please try again, or call or email us.', undefined, ['resend-unreachable']);
   }
 
   if (!res.ok) {
-    // Log the status only, never the form contents.
-    console.error(`quote: Resend error ${res.status}`);
-    return fail(502, 'Sorry, your request didn’t send. Please try again, or call or email us.');
+    // Report Resend's status and error type (e.g. invalid_api_key), never the form contents.
+    const detail = (await res.json().catch(() => ({}))) as { name?: string };
+    const codes = [`resend-${res.status}`, detail.name].filter((c): c is string => Boolean(c));
+    console.error(`quote: Resend error ${codes.join(', ')}`);
+    return fail(502, 'Sorry, your request didn’t send. Please try again, or call or email us.', undefined, codes);
   }
 
   return json({ ok: true });
