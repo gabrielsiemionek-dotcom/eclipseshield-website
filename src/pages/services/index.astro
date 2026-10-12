@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { services, serviceHref } from '../../data/services';
+import { breadcrumbSchema } from '../../lib/schema';
+import { site } from '../../config/site';
+
+const crumbs = [
+  { href: '/', label: 'Home' },
+  { href: '/services/', label: 'Services' },
+];
+
+const problems = [
+  { problem: 'People can see in', slug: 'privacy-window-film' },
+  { problem: 'The room gets too hot or bright', slug: 'solar-control-window-film' },
+  { problem: 'You want an etched glass look, or need to mark glass doors', slug: 'frosted-decorative-window-film' },
+  { problem: 'Floors, furniture or stock are fading', slug: 'uv-protection-window-film' },
+  { problem: 'You’re worried about glass breaking or break-ins', slug: 'safety-security-window-film' },
+  { problem: 'Shop windows keep getting scratched or tagged', slug: 'anti-graffiti-film' },
+];
+const titleOf = (slug: string) => services.find((s) => s.slug === slug)?.title ?? '';
+---
+
+<BaseLayout
+  title="Window Film Services"
+  description="Privacy, solar control, frosted and decorative, UV, safety and anti-graffiti window film for homes and businesses across Cheshire, Merseyside and Flintshire."
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    heading="Window film services"
+    eyebrow="What we fit"
+    intro={`We fit ${site.filmBrand} window film to homes and businesses. Pick the problem you want to solve, or ask us and we’ll recommend the right film for your glass.`}
+    crumbs={crumbs}
+    ctas
+  />
+
+  <section class="section" aria-labelledby="all-title">
+    <div class="wrap">
+      <h2 id="all-title" class="sr-only">All services</h2>
+      <div class="grid grid--3">
+        {services.map((s) => <ServiceCard service={s} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="problem-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Not sure which film?</p>
+        <h2 id="problem-title">Start with the problem</h2>
+        <p class="lead">
+          Many films do more than one job. Solar films also block UV, for example, and safety film can be combined
+          with privacy. We’ll explain the options at your free survey.
+        </p>
+      </div>
+      <ul class="problems">
+        {
+          problems.map((p) => (
+            <li>
+              <span>{p.problem}</span>
+              <a href={serviceHref(p.slug)}>{titleOf(p.slug)}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .problems {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .problems li {
+    display: grid;
+    gap: 0.25rem 1.5rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+  }
+  .problems span {
+    font-weight: 650;
+  }
+  .problems a {
+    font-weight: 700;
+  }
+  @media (min-width: 48rem) {
+    .problems li {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+    }
+  }
+</style>

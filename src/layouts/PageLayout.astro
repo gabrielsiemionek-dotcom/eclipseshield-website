@@ -1,6 +1,7 @@
 ---
 // Simple page shell: dark title band plus a readable content column.
 import BaseLayout from './BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
 
 interface Props {
   title: string;
@@ -15,13 +16,7 @@ const { heading, eyebrow, intro, ...rest } = Astro.props;
 ---
 
 <BaseLayout {...rest}>
-  <section class="page-hero">
-    <div class="wrap">
-      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-      <h1>{heading}</h1>
-      {intro && <p class="lead">{intro}</p>}
-    </div>
-  </section>
+  <PageHero heading={heading} eyebrow={eyebrow} intro={intro} />
   <div class="section page-body">
     <div class="wrap prose">
       <slot />
@@ -30,24 +25,6 @@ const { heading, eyebrow, intro, ...rest } = Astro.props;
 </BaseLayout>
 
 <style>
-  .page-hero {
-    background:
-      radial-gradient(40rem 24rem at 95% -20%, rgb(201 161 74 / 0.2), transparent 60%),
-      var(--black);
-    color: var(--silver);
-    padding-block: clamp(2.5rem, 6vw, 4.5rem);
-  }
-  .page-hero h1 {
-    color: var(--paper);
-    max-width: 48rem;
-  }
-  .page-hero .eyebrow {
-    color: var(--gold);
-  }
-  .page-hero .lead {
-    color: var(--silver);
-    margin: 0;
-  }
   .page-body {
     padding-block: clamp(2.5rem, 6vw, 4.5rem);
   }
