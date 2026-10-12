@@ -338,7 +338,7 @@ ul {
 
 /* ---------- Body offset for mobile CTA bar (only on pages that show it) ---------- */
 @media (max-width: 47.99rem) {
-  body:has(.mobile-cta) {
+  body.has-mobile-cta {
     padding-bottom: 4.75rem;
   }
 }

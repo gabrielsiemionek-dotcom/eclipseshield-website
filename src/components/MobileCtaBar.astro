@@ -2,8 +2,10 @@
 import Icon from './Icon.astro';
 import { site, telHref } from '../config/site';
 
+import { showMobileCta } from '../lib/page';
+
 // Not shown on the quote page: it gets in the way while typing, and the page already shows the phone number.
-const show = !Astro.url.pathname.startsWith('/quote/');
+const show = showMobileCta(Astro.url.pathname);
 ---
 
 {

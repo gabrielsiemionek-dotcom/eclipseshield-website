@@ -2,6 +2,24 @@
 
 A short dated entry for every change, newest first. Open issues are at the bottom.
 
+## 2026-10-12: Image brief and drop-in photos
+
+- `IMAGES.md`: what images to make (subject, shape, pixel size, exact file name), ready-made AI prompts, Canva search terms, rules (honesty, privacy, location data) and a wish list of real job photos.
+- Drop-in photos: `src/lib/images.ts` picks up `src/assets/photos/services/<service-slug>.jpg` and `src/assets/photos/pages/businesses.jpg` automatically. They replace the film illustrations with the planned alt text (in `src/data/services.ts`). Tested with stand-in photos (including an upper-case .JPG) and then removed.
+
+## 2026-10-12: Cookie consent, GTM-ready analytics, privacy and terms
+
+- **Consent Mode v2:** defaults set to "denied" on every page. "Basic" mode: Google Tag Manager only loads after the visitor allows analytics, so no Google requests happen before consent. The consent script sits at the end of `<head>` so it never delays the first paint.
+- **Cookie banner:** Accept all, Reject all (equal weight) and Manage (Necessary always on, Analytics toggle). "Cookie settings" in the footer reopens it. The choice is stored in local storage for 12 months. Withdrawing consent deletes `_ga` cookies and reloads to stop running tags. The banner is in the HTML from the start (no pop-in) and hidden immediately for returning visitors.
+- **Switched off until a GTM ID is added** (`gtmId` in `src/config/site.ts` or the `PUBLIC_GTM_ID` build variable). With no ID: no banner, no "Cookie settings" link, no Google code, and the privacy policy says no analytics is used. Adding the ID turns all of this on together. Preview the banner with `?cookie-demo`.
+- **dataLayer events** for GTM: `quote_start`, `generate_lead` (no personal data) and `consent_update`.
+- **`docs/analytics-setup.md`:** click-by-click GA4 and GTM setup (tags, triggers, variables, key event, data retention, testing).
+- **Privacy policy:** new cookies section (necessary storage, Turnstile, and analytics details plus a cookie table that appear only when GTM is configured), Google Analytics added to processors when configured, date corrected.
+- **Terms:** full website terms of use plus quotes and work (written quote applies, consumer rights, 14-day cancellation for off-premises or distance contracts, liability, law). Draft for review.
+- **The `:has()` body selector** for the mobile bar padding was replaced with a class set at build time.
+- **Tested in the browser:** no-GTM build (no banner, no Google scripts, consent defaults set); placeholder GTM build (banner on first visit, Accept loads GTM after a "granted" update, returning visitor loads GTM straight away with no banner, Cookie settings → untick analytics → saved, cookies deleted, page reloaded without GTM; Reject on first visit loads nothing); demo mode; phone-width layout.
+- **Lighthouse (mobile):** `/privacy/`, `/terms/`, `/contact/` 100 / 100 / 100 / 100. Home 94 to 96 performance in this session, both with and without the banner. Back-to-back runs of `main` on the same machine also scored 94 to 96, so the drop from earlier runs is down to the machine, not this change.
+
 ## 2026-10-12: Quote form working end to end, mobile tweaks
 
 - First real test lead received at contact@ from a phone (with 3 photos). Earlier failures were configuration: the Turnstile secret came from a different widget, then the Turnstile site key had been pasted into `RESEND_API_KEY` on Preview. Every failure message now ends with a code (Turnstile codes, `resend-<status>` plus error type, `config-missing`, `network`) so problems like this are quick to find.
@@ -89,6 +107,7 @@ A short dated entry for every change, newest first. Open issues are at the botto
 - **3M film warranty.** Unknown, so not mentioned yet.
 - **Opening hours.** Shown as "Open 7 days a week"; the structured data currently says open 24 hours, 7 days. Confirm what hours customers can actually call.
 - **Photo captions.** Permission confirmed. Tell us which film was fitted on the glass room job so captions can be more specific.
+- **Images:** see `IMAGES.md` for the images to make and where to save them.
 - **AI-edited images** in `Web Images` (privacy glass outside, exterior privacy glass) are not used. If they are used later, they must be labelled as illustrations, not real jobs.
 - **Logo files.** A vector (SVG) or high-resolution transparent PNG of the final logo would help for print and future pages.
 - **Domain and email.** The domain is registered through Squarespace. The email provider for `contact@eclipseshield.co.uk` needs confirming before DNS changes (Resend records, custom domain).
@@ -97,6 +116,7 @@ A short dated entry for every change, newest first. Open issues are at the botto
 - **Area copy review.** Check the town lists and local notes on the area pages, and tell us about any towns you would rather not list or want to add.
 - **Quote form go-live checklist:** Resend domain verified; `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY` added in Cloudflare Pages for Production and Preview; send a real test from the preview URL and check it arrives (and isn't in spam).
 - **Privacy policy:** draft. Confirm the retention periods (12 months for enquiries that don't go ahead, 6 years for customers) and add the ICO registration number once registered. Cookies and analytics section to be completed with the consent banner.
-- **Terms** are still the interim version. Full website and quote terms to follow.
+- **Terms:** draft. Check the quotes and work section matches how you actually work (quote validity, deposits, guarantees), ideally with a solicitor.
+- **Analytics:** when ready, follow `docs/analytics-setup.md` and add the GTM ID. The banner and privacy wording switch on automatically.
 - **Google Workspace email authentication:** the domain has no SPF or DKIM record for Google, so emails you send from contact@ are more likely to go to spam. Add an SPF TXT record (`v=spf1 include:_spf.google.com ~all`) and turn on DKIM in Google Admin.
 - **Optional:** automatic confirmation email to the customer after they submit the form.

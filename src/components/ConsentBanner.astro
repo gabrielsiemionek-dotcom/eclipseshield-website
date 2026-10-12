@@ -1,0 +1,253 @@
+---
+// Cookie banner: Accept all / Reject all / Manage. Only active when a GTM ID is configured
+// (or with ?cookie-demo in the URL, to preview it without loading anything).
+// Reopened from the "Cookie settings" link in the footer.
+// When a GTM ID is set the banner is in the HTML from the start (so it appears with the first paint),
+// and the small inline script below hides it straight away for visitors who have already chosen.
+import { site } from '../config/site';
+const enabled = Boolean(site.gtmId);
+---
+
+<section class="consent" data-consent hidden={!enabled} aria-labelledby="consent-title">
+  <div class="consent__inner">
+    <h2 class="consent__title" id="consent-title" tabindex="-1">Cookies</h2>
+    <p class="consent__text">
+      We’d like to use analytics cookies (Google Analytics) to understand how people use our website, so we can improve
+      it. They’re only set if you allow them. <a href="/privacy/#cookies">How we use cookies</a>
+    </p>
+
+    <div class="consent__manage" data-consent-manage hidden>
+      <label class="consent__option">
+        <input type="checkbox" checked disabled />
+        <span><strong>Necessary</strong>: needed for the website and quote form to work, including spam protection. Always on.</span>
+      </label>
+      <label class="consent__option">
+        <input type="checkbox" data-consent-analytics />
+        <span><strong>Analytics</strong>: anonymous statistics about which pages are visited and how the site is used.</span>
+      </label>
+    </div>
+
+    <div class="consent__actions">
+      <button type="button" class="consent__btn consent__btn--accept" data-consent-accept>Accept all</button>
+      <button type="button" class="consent__btn consent__btn--reject" data-consent-reject>Reject all</button>
+      <button type="button" class="consent__btn consent__btn--save" data-consent-save hidden>Save my choices</button>
+      <button type="button" class="consent__manage-link" data-consent-toggle aria-expanded="false">Manage</button>
+    </div>
+  </div>
+</section>
+<script is:inline>
+  (function () {
+    var b = document.querySelector('[data-consent]');
+    var demo = /[?&]cookie-demo/.test(location.search);
+    if (b && window.esConsent && window.esConsent.choice && !demo) b.hidden = true;
+    if (b && demo) b.hidden = false;
+  })();
+</script>
+
+<script>
+  type Choice = { v: 1; analytics: boolean; ts: number };
+  const w = window as unknown as Window & {
+    dataLayer: unknown[];
+    gtag: (...args: unknown[]) => void;
+    esConsent: { gtmId: string; choice: Choice | null };
+    esLoadGtm: () => void;
+    esGtmLoaded?: boolean;
+  };
+
+  const banner = document.querySelector<HTMLElement>('[data-consent]');
+  const demo = new URLSearchParams(location.search).has('cookie-demo');
+
+  if (banner && (w.esConsent?.gtmId || demo)) {
+    const $ = <T extends Element>(sel: string) => banner.querySelector<T>(sel)!;
+    const manage = $<HTMLElement>('[data-consent-manage]');
+    const analyticsBox = $<HTMLInputElement>('[data-consent-analytics]');
+    const toggle = $<HTMLButtonElement>('[data-consent-toggle]');
+    const save = $<HTMLButtonElement>('[data-consent-save]');
+    const settingsLinks = document.querySelectorAll<HTMLButtonElement>('[data-cookie-settings]');
+
+    const open = (withManage: boolean, focus: boolean) => {
+      banner.hidden = false;
+      setManage(withManage);
+      analyticsBox.checked = Boolean(w.esConsent.choice?.analytics);
+      if (focus) $<HTMLElement>('#consent-title').focus();
+    };
+    const close = () => {
+      banner.hidden = true;
+    };
+    const setManage = (on: boolean) => {
+      manage.hidden = !on;
+      save.hidden = !on;
+      toggle.hidden = on;
+      toggle.setAttribute('aria-expanded', String(on));
+    };
+
+    const clearAnalyticsCookies = () => {
+      const names = document.cookie
+        .split(';')
+        .map((c) => c.trim().split('=')[0])
+        .filter((n) => /^_ga/.test(n) || n === '_gid');
+      const parts = location.hostname.split('.');
+      for (const n of names) {
+        document.cookie = `${n}=; Max-Age=0; path=/`;
+        for (let i = 0; i < parts.length - 1; i++) {
+          document.cookie = `${n}=; Max-Age=0; path=/; domain=.${parts.slice(i).join('.')}`;
+        }
+      }
+    };
+
+    const decide = (analytics: boolean) => {
+      const choice: Choice = { v: 1, analytics, ts: Date.now() };
+      const wasLoaded = Boolean(w.esGtmLoaded);
+      w.esConsent.choice = choice;
+      try {
+        localStorage.setItem('es_consent', JSON.stringify(choice));
+      } catch {
+        /* storage blocked: the choice still applies to this page */
+      }
+      w.gtag('consent', 'update', { analytics_storage: analytics ? 'granted' : 'denied' });
+      w.dataLayer.push({ event: 'consent_update', analytics_consent: analytics ? 'granted' : 'denied' });
+      close();
+      if (analytics) {
+        if (!demo) w.esLoadGtm();
+      } else {
+        clearAnalyticsCookies();
+        // Tags that are already running can't be unloaded, so reload to stop them.
+        if (wasLoaded) location.reload();
+      }
+    };
+
+    $('[data-consent-accept]').addEventListener('click', () => decide(true));
+    $('[data-consent-reject]').addEventListener('click', () => decide(false));
+    save.addEventListener('click', () => decide(analyticsBox.checked));
+    toggle.addEventListener('click', () => {
+      setManage(true);
+      analyticsBox.focus();
+    });
+    settingsLinks.forEach((link) => {
+      link.hidden = false;
+      link.addEventListener('click', () => open(true, true));
+    });
+
+    if (!w.esConsent.choice || demo) open(false, false);
+  }
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    z-index: 60;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0.75rem;
+    pointer-events: none;
+  }
+  .consent[hidden] {
+    display: none;
+  }
+  .consent__inner {
+    pointer-events: auto;
+    max-width: 40rem;
+    margin-left: auto;
+    background: var(--black);
+    color: var(--silver);
+    border: 1px solid rgb(201 161 74 / 0.45);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.25rem 1rem;
+    box-shadow: 0 20px 50px rgb(0 0 0 / 0.45);
+  }
+  .consent__title {
+    color: var(--paper);
+    font-size: 1.15rem;
+    margin-bottom: 0.4rem;
+  }
+  .consent__title:focus {
+    outline: none;
+  }
+  .consent__text {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+  .consent__text a {
+    color: var(--gold-hi);
+  }
+  .consent__manage {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+  .consent__manage[hidden] {
+    display: none;
+  }
+  .consent__option {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+  .consent__option input {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0.2rem;
+    flex: none;
+    accent-color: var(--gold);
+  }
+  .consent__option strong {
+    color: var(--paper);
+  }
+  .consent__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .consent__btn {
+    flex: 1 1 8rem;
+    min-height: 2.75rem;
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 750;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+  .consent__btn[hidden] {
+    display: none;
+  }
+  /* Accept and reject are given equal weight, as the ICO expects. */
+  .consent__btn--accept,
+  .consent__btn--save {
+    background: var(--gold);
+    color: var(--black);
+  }
+  .consent__btn--reject {
+    background: var(--paper);
+    color: var(--black);
+  }
+  .consent__btn:hover {
+    filter: brightness(1.08);
+  }
+  .consent__manage-link {
+    flex-basis: 100%;
+    background: none;
+    border: 0;
+    padding: 0.5rem 0 0;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 650;
+    color: var(--gold-hi);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    cursor: pointer;
+    text-align: left;
+  }
+  .consent__manage-link[hidden] {
+    display: none;
+  }
+  @media (min-width: 48rem) {
+    .consent {
+      padding: 1.25rem;
+    }
+  }
+</style>

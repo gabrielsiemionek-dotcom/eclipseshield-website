@@ -15,6 +15,8 @@ export type ServiceContent = {
   metaDescription: string;
   h1: string;
   intro: string;
+  /** Alt text for the hero photo dropped in at src/assets/photos/services/<slug>.jpg (see IMAGES.md). */
+  photoAlt: string;
   benefits: { title: string; text: string }[];
   homes: string[];
   businesses: string[];
@@ -38,6 +40,7 @@ export const services: ServiceContent[] = [
     h1: 'Privacy window film and one-way mirror film',
     intro:
       'Overlooked by neighbours, a busy street or the office opposite? Privacy film stops people seeing in while still letting daylight through, without blinds or net curtains.',
+    photoAlt: 'A ground floor window with one-way mirror film, reflecting the street outside during the day',
     benefits: [
       {
         title: 'Privacy without losing light',
@@ -120,6 +123,7 @@ export const services: ServiceContent[] = [
     h1: 'Solar control window film for heat and glare',
     intro:
       'Rooms with a lot of glass can get uncomfortably hot and bright on sunny days. Solar control film reduces the heat and glare coming through the glass, so the room is more comfortable to use.',
+    photoAlt: 'A bright glass extension with solar control film on the windows and roof glass',
     benefits: [
       {
         title: 'Cooler rooms',
@@ -203,6 +207,7 @@ export const services: ServiceContent[] = [
     h1: 'Frosted and decorative window film',
     intro:
       'Frosted film gives you the look of etched or sandblasted glass for a fraction of the cost of replacing it. It adds privacy, lets light through, and can be cut into bands, patterns and designs.',
+    photoAlt: 'An office meeting room with frosted film bands on its glass walls',
     benefits: [
       {
         title: 'Privacy day and night',
@@ -285,6 +290,7 @@ export const services: ServiceContent[] = [
     h1: 'UV window film to help reduce fading',
     intro:
       'Sunlight through windows fades wooden floors, fabrics, artwork and products on display. UV film blocks almost all of the ultraviolet light that comes through the glass, usually with little or no change to how the window looks.',
+    photoAlt: 'A sunlit room with wooden floor and sofa next to large windows fitted with clear UV film',
     benefits: [
       {
         title: 'Blocks most UV',
@@ -354,6 +360,7 @@ export const services: ServiceContent[] = [
     h1: 'Safety and security window film',
     intro:
       'If glass breaks, safety film helps hold the pieces together instead of letting sharp shards fall or fly out. Thicker security films also make it harder and slower to get through a smashed window.',
+    photoAlt: 'A cracked glass pane held together in one piece by safety film',
     benefits: [
       {
         title: 'Holds broken glass together',
@@ -428,6 +435,7 @@ export const services: ServiceContent[] = [
     h1: 'Anti-graffiti window film',
     intro:
       'Scratched or etched graffiti on glass is hard to remove and often means replacing the pane. Anti-graffiti film is a clear protective layer: if it gets damaged, we replace the film instead of the glass.',
+    photoAlt: 'A shopfront window protected with clear anti-graffiti film',
     benefits: [
       {
         title: 'Protects the glass',
