@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import { areas, areaHref } from '../../data/areas';
+import { breadcrumbSchema } from '../../lib/schema';
+import { site } from '../../config/site';
+
+const crumbs = [
+  { href: '/', label: 'Home' },
+  { href: '/areas/', label: 'Areas' },
+];
+---
+
+<BaseLayout
+  title="Areas We Cover"
+  description={`${site.serviceAreaLine}. Window film for homes and businesses, with free surveys within ${site.freeSurveyRadiusMiles} miles of ${site.base}.`}
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    heading="Areas we cover"
+    eyebrow="Where we work"
+    intro={`${site.serviceAreaLine}.`}
+    crumbs={crumbs}
+    ctas
+  />
+
+  <section class="section" aria-labelledby="areas-title">
+    <div class="wrap">
+      <h2 id="areas-title" class="sr-only">Our areas</h2>
+      <div class="grid grid--3">
+        {
+          areas.map((a) => (
+            <article class="card area">
+              <div class="icon-badge">
+                <Icon name="pin" />
+              </div>
+              <h3>
+                <a href={areaHref(a.slug)}>{a.name}</a>
+              </h3>
+              <p>{a.summary}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mist" aria-labelledby="further-title">
+    <div class="wrap further">
+      <div>
+        <p class="eyebrow">Further afield</p>
+        <h2 id="further-title">Larger projects anywhere in the UK</h2>
+      </div>
+      <div>
+        <p class="lead">
+          For larger projects (around £1,000 and up), we can travel anywhere in the UK. Send us the details and some
+          photos, and we’ll confirm by email.
+        </p>
+        <p>
+          Surveys are free within {site.freeSurveyRadiusMiles} miles of {site.base}. Further out, we can often quote
+          from photos and rough measurements first.
+        </p>
+        <a class="btn btn--dark" href="/quote/">Get a free quote</a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .area {
+    position: relative;
+  }
+  .area h3 a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .area h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .area:hover {
+    border-color: var(--gold);
+  }
+  .area:has(a:focus-visible) {
+    outline: 3px solid var(--gold);
+    outline-offset: 3px;
+  }
+  .area h3 a:focus-visible {
+    outline: none;
+  }
+  .area p {
+    color: var(--text-2);
+  }
+  .further {
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 62rem) {
+    .further {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 4rem;
+    }
+  }
+</style>

@@ -8,6 +8,7 @@ import FaqList from '../components/FaqList.astro';
 import { faqSchema } from '../lib/schema';
 import { services } from '../data/services';
 import { homeFaqs } from '../data/faqs';
+import { areas, areaHref } from '../data/areas';
 import { site } from '../config/site';
 import heroPhoto from '../assets/photos/fitting-glass-room.jpg';
 import seaViewPhoto from '../assets/photos/glass-room-sea-view.jpg';
@@ -232,27 +233,19 @@ const reasons = [
         </p>
       </div>
       <ul class="areas__list">
-        <li>
-          <Icon name="pin" />
-          <div>
-            <h3>Merseyside</h3>
-            <p>The Wirral, Liverpool, Sefton, Knowsley and St Helens</p>
-          </div>
-        </li>
-        <li>
-          <Icon name="pin" />
-          <div>
-            <h3>Cheshire</h3>
-            <p>Chester, Ellesmere Port, Neston, Warrington, Northwich and beyond</p>
-          </div>
-        </li>
-        <li>
-          <Icon name="pin" />
-          <div>
-            <h3>Flintshire</h3>
-            <p>Deeside, Flint, Mold, Buckley, Holywell and surrounding areas</p>
-          </div>
-        </li>
+        {
+          areas.map((a) => (
+            <li>
+              <Icon name="pin" />
+              <div>
+                <h3>
+                  <a href={areaHref(a.slug)}>{a.name}</a>
+                </h3>
+                <p>{a.summary}</p>
+              </div>
+            </li>
+          ))
+        }
       </ul>
     </div>
   </section>
@@ -460,6 +453,7 @@ const reasons = [
     gap: 1rem;
   }
   .areas__list li {
+    position: relative;
     display: flex;
     gap: 1rem;
     background: var(--paper);
@@ -473,6 +467,17 @@ const reasons = [
     flex: none;
     color: var(--gold-deep);
     margin-top: 0.1rem;
+  }
+  .areas__list h3 a {
+    color: var(--text);
+  }
+  .areas__list h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .areas__list li:hover {
+    border-color: var(--gold);
   }
   .areas__list h3 {
     margin-bottom: 0.2rem;

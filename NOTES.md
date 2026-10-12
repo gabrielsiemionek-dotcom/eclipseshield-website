@@ -2,6 +2,15 @@
 
 A short dated entry for every change, newest first. Open issues are at the bottom.
 
+## 2026-10-12: Area pages
+
+- Area pages for Merseyside, Cheshire and Flintshire from one template (`src/pages/areas/[slug].astro`, content in `src/data/areas.ts`), plus an `/areas/` overview.
+- Each page has: towns covered (grouped), what the free 20-mile survey area means there, common local window problems linked to the right services, local "good to know" notes (conservation areas and listed buildings, flats, rural access, Welsh building regulations, business sites), a short how-it-works, local FAQs, links to the other areas and a quote call to action.
+- Copy describes the area and the jobs film suits. It does not claim past jobs or customers in any area.
+- Navigation "Areas" now goes to `/areas/`; the home page area list links to each area page.
+- BreadcrumbList and FAQPage structured data on area pages. Sitemap now lists 17 pages.
+- Lighthouse (mobile): `/areas/`, all three area pages and home 100 / 100 / 100 / 100. Link and JSON-LD check: 18 pages, no problems.
+
 ## 2026-10-12: Service pages, Homes and Businesses
 
 - Six service pages from one template (`src/pages/services/[slug].astro`, content in `src/data/services.ts`): privacy and one-way mirror, solar and heat control, frosted and decorative, UV and fade protection, safety and security, anti-graffiti. Each has benefits, where it is used, film options, an honest "Good to know" box, FAQs, related services and a quote call to action.
@@ -53,4 +62,5 @@ A short dated entry for every change, newest first. Open issues are at the botto
 - **Domain and email.** The domain is registered through Squarespace. The email provider for `contact@eclipseshield.co.uk` needs confirming before DNS changes (Resend records, custom domain).
 - **Film samples.** If you carry 3M sample swatches to surveys, tell us and the copy can say so (it currently only says "ask us about samples").
 - **Service copy review.** Please read the service pages for anything you don't offer or would describe differently (for example edge attachment for security film, custom logos, fitting on conservatory roofs).
+- **Area copy review.** Check the town lists and local notes on the area pages, and tell us about any towns you would rather not list or want to add.
 - **Legal pages** are interim drafts. Full UK GDPR privacy policy and terms come with the form and analytics work.
