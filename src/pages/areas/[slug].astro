@@ -1,0 +1,279 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import FaqList from '../../components/FaqList.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import { areas, areaHref, type Area } from '../../data/areas';
+import { getService, serviceHref } from '../../data/services';
+import { breadcrumbSchema, faqSchema } from '../../lib/schema';
+import { site } from '../../config/site';
+
+export function getStaticPaths() {
+  return areas.map((area) => ({ params: { slug: area.slug }, props: { area } }));
+}
+
+interface Props {
+  area: Area;
+}
+const { area: a } = Astro.props;
+
+const crumbs = [
+  { href: '/', label: 'Home' },
+  { href: '/areas/', label: 'Areas' },
+  { href: areaHref(a.slug), label: a.name },
+];
+const titleOf = (slug: string) => getService(slug)?.title ?? slug;
+const otherAreas = areas.filter((o) => o.slug !== a.slug);
+---
+
+<BaseLayout title={a.metaTitle} description={a.metaDescription} schema={[breadcrumbSchema(crumbs), faqSchema(a.faqs)]}>
+  <PageHero heading={a.h1} eyebrow={`Areas we cover · ${a.name}`} intro={a.intro} crumbs={crumbs} ctas />
+
+  <!-- Towns -->
+  <section class="section" aria-labelledby="towns-title">
+    <div class="wrap towns">
+      <div>
+        <p class="eyebrow">Where we work</p>
+        <h2 id="towns-title">Towns we cover in {a.name}</h2>
+        <p class="lead">{a.surveyNote}</p>
+        <p>
+          Not on the list? We cover the whole of {a.name}, and larger projects (around £1,000 and up) anywhere in the
+          UK. <a href="/quote/">Ask us for a quote</a> and we’ll confirm.
+        </p>
+      </div>
+      <div class="towns__groups">
+        {
+          a.towns.map((t) => (
+            <div class="towns__group">
+              <h3>
+                <Icon name="pin" />
+                {t.group}
+              </h3>
+              <ul>
+                {t.places.map((p) => (
+                  <li>{p}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Typical jobs -->
+  <section class="section section--mist" aria-labelledby="jobs-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Where film helps in {a.name}</p>
+        <h2 id="jobs-title">Common window problems we can fix</h2>
+      </div>
+      <div class="grid grid--2">
+        {
+          a.jobs.map((j) => (
+            <article class="card job">
+              <h3>{j.title}</h3>
+              <p>{j.text}</p>
+              <ul class="job__links">
+                {j.services.map((slug) => (
+                  <li>
+                    <a href={serviceHref(slug)}>{titleOf(slug)}</a>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Local notes -->
+  <section class="section" aria-labelledby="notes-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Good to know</p>
+        <h2 id="notes-title">Before you book in {a.name}</h2>
+      </div>
+      <div class="grid grid--2">
+        {
+          a.localNotes.map((n) => (
+            <div class="note">
+              <h3>{n.title}</h3>
+              <p>{n.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works (short) -->
+  <section class="section section--dark" aria-labelledby="how-title">
+    <div class="wrap how">
+      <div>
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-title">Three simple steps</h2>
+      </div>
+      <ol class="how__steps">
+        <li>
+          <strong>Enquire.</strong> Use the quote form, call {site.phone} or email us. Photos help us quote faster.
+        </li>
+        <li>
+          <strong>Survey or quote.</strong> We visit to measure up (free within {site.freeSurveyRadiusMiles} miles of
+          {' '}{site.base}) or quote from your photos.
+        </li>
+        <li><strong>Fitting.</strong> We fit your film at a time that suits you and tidy up afterwards.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section--mist" aria-labelledby="faq-title">
+    <div class="wrap faq">
+      <div class="section-head">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="faq-title">Questions from {a.name}</h2>
+      </div>
+      <FaqList faqs={a.faqs} />
+    </div>
+  </section>
+
+  <!-- Other areas -->
+  <section class="section other" aria-labelledby="other-title">
+    <div class="wrap">
+      <h2 id="other-title">Other areas we cover</h2>
+      <ul class="other__list">
+        {
+          otherAreas.map((o) => (
+            <li>
+              <a class="btn btn--outline" href={areaHref(o.slug)}>
+                <Icon name="pin" />
+                Window film in {o.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand title={`Get a free window film quote in ${a.name}`} />
+</BaseLayout>
+
+<style>
+  .towns {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .towns__groups {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  }
+  .towns__group {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+  }
+  .towns__group h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+  }
+  .towns__group h3 :global(svg) {
+    width: 1.2rem;
+    height: 1.2rem;
+    color: var(--gold-deep);
+  }
+  .towns__group ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    color: var(--text-2);
+  }
+  .job {
+    display: flex;
+    flex-direction: column;
+  }
+  .job p {
+    color: var(--text-2);
+    flex: 1;
+  }
+  .job__links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .job__links a {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    background: var(--mist);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 650;
+    text-decoration: none;
+  }
+  .job__links a:hover {
+    background: var(--black);
+    color: var(--gold-hi);
+  }
+  .note {
+    border-left: 4px solid var(--gold);
+    padding: 0.25rem 0 0.25rem 1.25rem;
+  }
+  .note p {
+    color: var(--text-2);
+    margin: 0;
+  }
+  .how {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .how__steps {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 1rem;
+  }
+  .how__steps li::marker {
+    color: var(--gold);
+    font-weight: 800;
+  }
+  .how__steps strong {
+    color: var(--paper);
+  }
+  .faq {
+    display: grid;
+    gap: 1rem;
+  }
+  .other h2 {
+    font-size: 1.5rem;
+  }
+  .other__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  @media (min-width: 62rem) {
+    .towns,
+    .faq,
+    .how {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 4rem;
+    }
+  }
+</style>

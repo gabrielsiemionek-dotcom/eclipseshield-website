@@ -25,11 +25,10 @@ export const site = {
 
 export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, '').replace(/^0/, '+44')}`;
 
-// Areas and FAQ point at home page sections until the area pages exist.
 export const nav = [
   { href: '/services/', label: 'Services' },
   { href: '/homes/', label: 'Homes' },
   { href: '/businesses/', label: 'Businesses' },
-  { href: '/#areas', label: 'Areas' },
+  { href: '/areas/', label: 'Areas' },
   { href: '/#faq', label: 'FAQ' },
 ];
