@@ -1,0 +1,63 @@
+---
+import LogoMark from './LogoMark.astro';
+interface Props {
+  id?: string;
+}
+const { id = 'logo' } = Astro.props;
+---
+
+<a href="/" class="logo">
+  <LogoMark class="logo__mark" id={id} />
+  <span class="logo__text">
+    <span class="logo__eclipse">Eclipse</span>
+    <span class="logo__shield">Shield</span>
+  </span>
+  <span class="sr-only">, home page</span>
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--gold-hi);
+  }
+  .logo :global(.logo__mark) {
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: none;
+  }
+  .logo__text {
+    display: grid;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .logo__eclipse {
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    background: var(--gold-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .logo__shield {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.42em;
+    color: var(--gold);
+    margin-top: 0.3rem;
+  }
+  .logo__shield::before,
+  .logo__shield::after {
+    content: '';
+    height: 1px;
+    flex: 1;
+    background: currentColor;
+    opacity: 0.7;
+  }
+</style>

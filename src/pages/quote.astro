@@ -1,0 +1,47 @@
+---
+// Temporary page until the multi-step quote form is built.
+import PageLayout from '../layouts/PageLayout.astro';
+import Icon from '../components/Icon.astro';
+import { site, telHref } from '../config/site';
+
+const subject = encodeURIComponent('Free quote request');
+const body = encodeURIComponent(
+  [
+    'Property type (home / shop / office / other):',
+    'What you need (privacy, heat, frosted, UV, safety, not sure):',
+    'Roughly how many windows:',
+    'Postcode and town:',
+    'Best way to contact you:',
+    '',
+    'Photos of the windows are very helpful. Attach a few if you can.',
+  ].join('\n'),
+);
+---
+
+<PageLayout
+  title="Get a Free Window Film Quote"
+  description="Request a free, no-obligation window film quote from Eclipse Shield. Based in Bromborough, covering Cheshire, Merseyside and Flintshire."
+  eyebrow="Free quote"
+  heading="Get a free, no-obligation quote"
+  intro="Tell us a little about your windows and we will reply the same day."
+>
+  <p>
+    Our online quote form is on its way. Until it is ready, send us an email with a few details and some photos of the
+    windows, and we will come back to you with a quote or arrange a free survey (within {site.freeSurveyRadiusMiles}
+    miles of {site.base}).
+  </p>
+  <div class="btn-row">
+    <a class="btn btn--dark" href={`mailto:${site.email}?subject=${subject}&body=${body}`}>
+      <Icon name="mail" />
+      Email {site.email}
+    </a>
+    {
+      site.phone && (
+        <a class="btn btn--outline" href={telHref(site.phone)}>
+          <Icon name="phone" />
+          Call {site.phone}
+        </a>
+      )
+    }
+  </div>
+</PageLayout>

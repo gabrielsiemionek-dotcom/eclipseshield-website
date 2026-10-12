@@ -13,7 +13,7 @@ npm install
 npm run dev        # http://localhost:4321 with live reload
 npm run build      # production build into dist/
 npm run preview    # serve the production build
-npm run lh -- / /quote/   # mobile Lighthouse against the running preview
+npm run lh -- home quote   # mobile Lighthouse against the running preview
 ```
 
 ## Where things live

@@ -1,0 +1,18 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout
+  title="Page Not Found"
+  description="Sorry, we couldn't find that page."
+  eyebrow="Error 404"
+  heading="We couldn’t find that page"
+  intro="It may have moved, or the link may be wrong."
+  noindex
+>
+  <p>Here are some places to start instead:</p>
+  <div class="btn-row">
+    <a class="btn btn--dark" href="/">Go to the home page</a>
+    <a class="btn btn--outline" href="/quote/">Get a free quote</a>
+  </div>
+</PageLayout>

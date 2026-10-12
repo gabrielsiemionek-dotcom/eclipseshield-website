@@ -1,0 +1,42 @@
+---
+// Interim notice. Replaced by the full UK GDPR privacy policy when the quote form and analytics are added.
+import PageLayout from '../layouts/PageLayout.astro';
+import { site } from '../config/site';
+---
+
+<PageLayout
+  title="Privacy Policy"
+  description="How Eclipse Shield Ltd handles your personal information."
+  eyebrow="Legal"
+  heading="Privacy policy"
+  intro="Draft: last updated October 2026."
+>
+  <h2>Who we are</h2>
+  <p>
+    This website is run by {site.legalName} ("we", "us"), a window film company based in {site.base}, registered in {site.registeredIn} with company number {site.companyNumber}. You can contact us
+    at <a href={`mailto:${site.email}`}>{site.email}</a>.
+  </p>
+
+  <h2>What this website collects</h2>
+  <p>
+    At the moment this website does not use analytics or advertising cookies, and it has no online forms. If you email
+    or call us, we use the details you give us (such as your name, contact details, address and photos of your windows)
+    only to answer your enquiry, prepare a quote and carry out any work you ask us to do.
+  </p>
+  <p>
+    Our website host, Cloudflare, processes basic technical data such as IP addresses to deliver the site and protect it
+    from attacks.
+  </p>
+
+  <h2>Your rights</h2>
+  <p>
+    You can ask us for a copy of the information we hold about you, or ask us to correct or delete it, by emailing
+    <a href={`mailto:${site.email}`}>{site.email}</a>. You can also complain to the Information Commissioner’s Office
+    (<a href="https://ico.org.uk/make-a-complaint/">ico.org.uk</a>).
+  </p>
+
+  <p>
+    <em>A full privacy policy covering the quote form, analytics and cookie choices will replace this page before those
+      features go live.</em>
+  </p>
+</PageLayout>
