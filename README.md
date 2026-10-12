@@ -37,6 +37,7 @@ To send a real test email, remove `EMAIL_DRY_RUN` from `.dev.vars` and add `RESE
 - `functions/`: Cloudflare Pages Functions (the quote form endpoint).
 - `NOTES.md`: change log and open issues.
 - `docs/analytics-setup.md`: how to set up GA4 and Google Tag Manager (the site is ready; add the GTM ID to switch it on).
+- `IMAGES.md`: image brief and where to drop new photos.
 
 ## Cloudflare Pages settings
 

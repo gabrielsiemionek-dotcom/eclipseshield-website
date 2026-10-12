@@ -3,9 +3,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import AudiencePage from '../components/AudiencePage.astro';
 import FilmVisual from '../components/FilmVisual.astro';
+import { Picture } from 'astro:assets';
+import { dropInPhoto } from '../lib/images';
 import CtaBand from '../components/CtaBand.astro';
 import { breadcrumbSchema, faqSchema } from '../lib/schema';
 import { site } from '../config/site';
+
+// Drop-in hero photo: src/assets/photos/pages/businesses.jpg (see IMAGES.md). Illustration until then.
+const heroPhoto = dropInPhoto('pages', 'businesses');
 
 const crumbs = [
   { href: '/', label: 'Home' },
@@ -96,7 +101,22 @@ const faqs = [
     crumbs={crumbs}
     ctas
   >
-    <FilmVisual slot="media" variant="frosted" />
+    {
+      heroPhoto ? (
+        <Picture
+          slot="media"
+          src={heroPhoto}
+          alt="A modern office with frosted window film on glass meeting room walls"
+          formats={['avif', 'webp']}
+          widths={[360, 540, 720, 960]}
+          sizes="(min-width: 32rem) 30rem, calc(100vw - 2rem)"
+          layout="none"
+          priority
+        />
+      ) : (
+        <FilmVisual slot="media" variant="frosted" />
+      )
+    }
   </PageHero>
 
   <AudiencePage

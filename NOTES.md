@@ -2,6 +2,11 @@
 
 A short dated entry for every change, newest first. Open issues are at the bottom.
 
+## 2026-10-12: Image brief and drop-in photos
+
+- `IMAGES.md`: what images to make (subject, shape, pixel size, exact file name), ready-made AI prompts, Canva search terms, rules (honesty, privacy, location data) and a wish list of real job photos.
+- Drop-in photos: `src/lib/images.ts` picks up `src/assets/photos/services/<service-slug>.jpg` and `src/assets/photos/pages/businesses.jpg` automatically. They replace the film illustrations with the planned alt text (in `src/data/services.ts`). Tested with stand-in photos (including an upper-case .JPG) and then removed.
+
 ## 2026-10-12: Cookie consent, GTM-ready analytics, privacy and terms
 
 - **Consent Mode v2:** defaults set to "denied" on every page. "Basic" mode: Google Tag Manager only loads after the visitor allows analytics, so no Google requests happen before consent. The consent script sits at the end of `<head>` so it never delays the first paint.
@@ -102,6 +107,7 @@ A short dated entry for every change, newest first. Open issues are at the botto
 - **3M film warranty.** Unknown, so not mentioned yet.
 - **Opening hours.** Shown as "Open 7 days a week"; the structured data currently says open 24 hours, 7 days. Confirm what hours customers can actually call.
 - **Photo captions.** Permission confirmed. Tell us which film was fitted on the glass room job so captions can be more specific.
+- **Images:** see `IMAGES.md` for the images to make and where to save them.
 - **AI-edited images** in `Web Images` (privacy glass outside, exterior privacy glass) are not used. If they are used later, they must be labelled as illustrations, not real jobs.
 - **Logo files.** A vector (SVG) or high-resolution transparent PNG of the final logo would help for print and future pages.
 - **Domain and email.** The domain is registered through Squarespace. The email provider for `contact@eclipseshield.co.uk` needs confirming before DNS changes (Resend records, custom domain).

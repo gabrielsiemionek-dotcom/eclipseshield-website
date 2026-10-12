@@ -11,6 +11,7 @@ import Icon from '../../components/Icon.astro';
 import { services, getService, serviceHref, type ServiceContent } from '../../data/services';
 import { breadcrumbSchema, faqSchema, serviceSchema } from '../../lib/schema';
 import { site } from '../../config/site';
+import { dropInPhoto } from '../../lib/images';
 import terracePhoto from '../../assets/photos/glass-room-terrace.jpg';
 
 export function getStaticPaths() {
@@ -22,14 +23,18 @@ interface Props {
 }
 const { service: s } = Astro.props;
 
-// Real job photos, where we have one that fits the service.
-const photos: Record<string, { src: ImageMetadata; alt: string }> = {
+// Hero image, in order of preference:
+// 1. a drop-in photo at src/assets/photos/services/<slug>.jpg (see IMAGES.md)
+// 2. a real job photo that fits the service
+// 3. the film illustration
+const jobPhotos: Record<string, { src: ImageMetadata; alt: string }> = {
   'solar-control-window-film': {
     src: terracePhoto,
     alt: 'View out through the floor-to-ceiling glass of a garden room onto a terrace with table and chairs',
   },
 };
-const photo = photos[s.slug];
+const dropIn = dropInPhoto('services', s.slug);
+const photo = dropIn ? { src: dropIn, alt: s.photoAlt } : jobPhotos[s.slug];
 
 const crumbs = [
   { href: '/', label: 'Home' },
