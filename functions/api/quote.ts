@@ -37,7 +37,8 @@ const json = (body: unknown, status = 200) =>
     headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
   });
 
-const fail = (status: number, error: string, field?: string) => json({ ok: false, error, field }, status);
+const fail = (status: number, error: string, field?: string, codes?: string[]) =>
+  json({ ok: false, error, field, codes }, status);
 
 const text = (fd: FormData, name: string, max = 200) => {
   const v = fd.get(name);
@@ -63,6 +64,8 @@ const toBase64 = (buf: ArrayBuffer) => {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Returns Cloudflare's error codes on failure (e.g. timeout-or-duplicate, invalid-input-secret).
+// They contain no personal data and make misconfiguration easy to spot.
 async function verifyTurnstile(token: string, secret: string, ip: string | null) {
   const body = new FormData();
   body.append('secret', secret);
@@ -70,11 +73,10 @@ async function verifyTurnstile(token: string, secret: string, ip: string | null)
   if (ip) body.append('remoteip', ip);
   try {
     const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
-    const data = (await res.json()) as { success: boolean };
-    return data.success === true;
+    const data = (await res.json()) as { success: boolean; 'error-codes'?: string[] };
+    return { ok: data.success === true, codes: data['error-codes'] ?? [] };
   } catch {
-    console.error('quote: Turnstile verification request failed');
-    return false;
+    return { ok: false, codes: ['siteverify-unreachable'] };
   }
 }
 
@@ -98,8 +100,12 @@ export const onRequestPost = async ({ request, env }: Ctx) => {
   }
 
   const token = text(fd, 'cf-turnstile-response', 4096);
-  if (!token || !(await verifyTurnstile(token, env.TURNSTILE_SECRET_KEY, request.headers.get('CF-Connecting-IP')))) {
-    return fail(400, 'We couldn’t confirm you’re not a robot. Please try again.', 'turnstile');
+  const check = token
+    ? await verifyTurnstile(token, env.TURNSTILE_SECRET_KEY, request.headers.get('CF-Connecting-IP'))
+    : { ok: false, codes: ['missing-input-response'] };
+  if (!check.ok) {
+    console.error(`quote: Turnstile failed: ${check.codes.join(', ')}`);
+    return fail(400, 'We couldn’t confirm you’re not a robot. Please try again.', 'turnstile', check.codes);
   }
 
   // Contact details (the only required fields)
