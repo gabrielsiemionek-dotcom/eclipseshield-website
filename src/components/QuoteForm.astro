@@ -238,9 +238,10 @@ const steps = ['Property', 'What you need', 'Windows', 'Photos', 'Location', 'Ti
         <p class="qf__error" id="qf-consent-error" hidden></p>
       </div>
 
-      <p class="qf__ts-hint" data-turnstile-hint hidden>Please tick the box below to confirm you’re human.</p>
-      <div class="qf__turnstile" data-turnstile></div>
     </fieldset>
+
+    <p class="qf__ts-hint" data-turnstile-hint hidden>Quick check: please tick the box below to confirm you’re human.</p>
+    <div class="qf__turnstile" data-turnstile></div>
 
     <p class="qf__form-error" data-form-error role="alert" hidden></p>
 
@@ -319,7 +320,7 @@ const steps = ['Property', 'What you need', 'Windows', 'Photos', 'Location', 'Ti
       if (started) return;
       started = true;
       w.dataLayer.push({ event: 'quote_start', form_name: 'quote' });
-      loadTurnstile();
+      renderTurnstile();
     };
     form.addEventListener('input', markStarted);
     form.addEventListener('change', markStarted);
@@ -336,7 +337,6 @@ const steps = ['Property', 'What you need', 'Windows', 'Photos', 'Location', 'Ti
       nextBtn.hidden = i === total - 1;
       submitBtn.hidden = i !== total - 1;
       formError.hidden = true;
-      if (i === total - 1) renderTurnstile();
       if (focus) {
         steps[i].querySelector<HTMLElement>('.qf__q')?.focus({ preventScroll: true });
         form.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -449,61 +449,71 @@ const steps = ['Property', 'What you need', 'Windows', 'Photos', 'Location', 'Ti
     });
 
     // ----- Turnstile -----
-    // The script loads on first interaction (so it doesn't slow the page), but the check only runs
-    // on the last step, so its token (valid for 5 minutes) is fresh when the form is sent.
-    let wantRender = false;
-    let turnstileError = '';
-    let needsTick = false;
+    // Starts quietly when someone begins the form, so a token is normally ready by the last step.
+    // Tokens last 5 minutes and work once: the widget refreshes expired ones itself, and we reset it
+    // after each use. If Cloudflare wants a tick in the box, a hint appears and sending waits for it.
+    const tsBox = $<HTMLElement>('[data-turnstile]');
     const tsHint = $<HTMLElement>('[data-turnstile-hint]');
+    let token = '';
+    let turnstileError = '';
+    let waiters: ((t: string) => void)[] = [];
     function renderTurnstile() {
-      wantRender = true;
-      if (!w.turnstile) return loadTurnstile();
       if (turnstileId !== undefined) return;
-      turnstileId = w.turnstile.render($<HTMLElement>('[data-turnstile]'), {
+      if (!w.turnstile) return loadTurnstile();
+      turnstileId = w.turnstile.render(tsBox, {
         sitekey: form.dataset.sitekey,
         appearance: 'interaction-only',
         theme: 'light',
         'refresh-expired': 'auto',
+        callback: (t: string) => {
+          token = t;
+          turnstileError = '';
+          tsHint.hidden = true;
+          waiters.forEach((resolve) => resolve(t));
+          waiters = [];
+        },
+        'expired-callback': () => {
+          token = '';
+        },
         'error-callback': (code: string) => {
+          token = '';
           turnstileError = String(code);
         },
-        // Cloudflare occasionally wants a tick in the box. Make that obvious.
         'before-interactive-callback': () => {
-          needsTick = true;
           tsHint.hidden = false;
-          $<HTMLElement>('[data-turnstile]').scrollIntoView({ behavior: 'smooth', block: 'center' });
         },
         'after-interactive-callback': () => {
-          needsTick = false;
           tsHint.hidden = true;
         },
       });
     }
-    const resetTurnstile = () => {
-      if (w.turnstile && turnstileId !== undefined) w.turnstile.reset(turnstileId);
-      needsTick = false;
-      tsHint.hidden = true;
-    };
-    // Wait briefly for a fresh token instead of failing straight away.
-    const getToken = async (timeoutMs = 8000) => {
-      renderTurnstile();
-      const start = Date.now();
-      while (Date.now() - start < timeoutMs) {
-        if (needsTick) return '';
-        if (w.turnstile && turnstileId !== undefined) {
-          if (w.turnstile.isExpired(turnstileId)) resetTurnstile();
-          const t = w.turnstile.getResponse(turnstileId);
-          if (t) return t;
+    // Take the current token (once), or wait up to timeoutMs for the next one.
+    const takeToken = (timeoutMs: number) =>
+      new Promise<string>((resolve) => {
+        renderTurnstile();
+        if (token) {
+          const t = token;
+          token = '';
+          return resolve(t);
         }
-        await new Promise((r) => setTimeout(r, 250));
-      }
-      return '';
+        const onToken = (t: string) => {
+          clearTimeout(timer);
+          token = '';
+          resolve(t);
+        };
+        const timer = setTimeout(() => {
+          waiters = waiters.filter((x) => x !== onToken);
+          resolve('');
+        }, timeoutMs);
+        waiters.push(onToken);
+      });
+    const resetTurnstile = () => {
+      token = '';
+      if (w.turnstile && turnstileId !== undefined) w.turnstile.reset(turnstileId);
     };
     function loadTurnstile() {
       if (document.querySelector('script[data-turnstile-script]')) return;
-      w.onTurnstileLoad = () => {
-        if (wantRender) renderTurnstile();
-      };
+      w.onTurnstileLoad = () => renderTurnstile();
       const s = document.createElement('script');
       s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad';
       s.async = true;
@@ -552,71 +562,111 @@ const steps = ['Property', 'What you need', 'Windows', 'Photos', 'Location', 'Ti
     );
 
     // ----- Submit -----
+    let sending = false;
+    const resetButton = () => {
+      sending = false;
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send my quote request';
+    };
+    const showError = (message: string) => {
+      formError.textContent = message;
+      formError.hidden = false;
+    };
+
+    // Wait for a spam-check token. If Cloudflare asks for a tick, keep waiting and send as soon as it's ticked.
+    const waitForToken = async () => {
+      const startedAt = Date.now();
+      let pointedAtBox = false;
+      while (Date.now() - startedAt < 180000) {
+        const t = await takeToken(1000);
+        if (t) return t;
+        if (!tsHint.hidden) {
+          submitBtn.textContent = 'Waiting for the tick…';
+          showError('Nearly there. Tick the “Verify you are human” box above and your request will send automatically.');
+          if (!pointedAtBox) {
+            tsBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            pointedAtBox = true;
+          }
+        } else if (Date.now() - startedAt > 20000 || (turnstileError && Date.now() - startedAt > 6000)) {
+          return '';
+        }
+      }
+      return '';
+    };
+
+    const post = async (t: string) => {
+      const fd = new FormData(form);
+      fd.delete('photos');
+      photos.forEach((p) => fd.append('photos', p.blob, p.name));
+      fd.set('cf-turnstile-response', t);
+      const res = await fetch(form.action, { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; field?: string; codes?: string[] };
+      return { ok: res.ok && data.ok === true, data, fd };
+    };
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (sending) return;
       if (current !== total - 1) return show(total - 1);
       if (!validate()) return;
 
+      sending = true;
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending…';
       formError.hidden = true;
 
-      const token = await getToken();
-      if (!token) {
-        formError.textContent = needsTick
-          ? 'Please tick the “Verify you are human” box above, then press Send again.'
-          : turnstileError
-            ? `Our spam check couldn’t load (code ${turnstileError}). Please try again, or call or email us.`
-            : 'Our spam check is taking longer than usual. Please try again in a few seconds.';
-        if (needsTick) $<HTMLElement>('[data-turnstile]').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        formError.hidden = false;
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send my quote request';
-        return;
-      }
-
-      const fd = new FormData(form);
-      fd.delete('photos');
-      photos.forEach((p) => fd.append('photos', p.blob, p.name));
-      fd.set('cf-turnstile-response', token);
-
       try {
-        const res = await fetch(form.action, { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
-        const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; field?: string; codes?: string[] };
-        if (!res.ok || !data.ok) {
-          const msg = (data.error || 'Send failed') + (data.codes?.length ? ` (code: ${data.codes.join(', ')})` : '');
-          throw Object.assign(new Error(msg), { field: data.field });
-        }
+        for (let attempt = 0; attempt < 2; attempt++) {
+          const t = await waitForToken();
+          if (!t) {
+            resetTurnstile();
+            return showError(
+              (turnstileError
+                ? `Our spam check couldn’t finish (code ${turnstileError}).`
+                : 'Our spam check is taking longer than usual.') +
+                ' Please press Send again, or call or email us.',
+            );
+          }
+          formError.hidden = true;
+          submitBtn.textContent = 'Sending…';
+          const { ok, data, fd } = await post(t);
+          resetTurnstile(); // tokens work once; get a fresh one for any further attempt
 
-        // No personal data in analytics events.
-        w.dataLayer.push({
-          event: 'generate_lead',
-          form_name: 'quote',
-          property_type: String(fd.get('property_type') || 'not_given'),
-          interests: fd.getAll('interests').join(',') || 'not_given',
-          photo_count: photos.length,
-        });
-        form.hidden = true;
-        done.hidden = false;
-        done.querySelector<HTMLElement>('h2')?.focus();
-        done.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        photos.forEach((p) => URL.revokeObjectURL(p.url));
-      } catch (err) {
-        const e2 = err as Error & { field?: string };
-        formError.textContent = e2.message.startsWith('Send failed') || e2.message === 'Failed to fetch'
-          ? 'Sorry, your request didn’t send. Please check your connection and try again, or call or email us.'
-          : e2.message;
-        formError.hidden = false;
-        const fieldEl = e2.field && form.querySelector<HTMLInputElement>(`[name="${e2.field}"]`);
-        if (fieldEl && e2.field !== 'photos' && e2.field !== 'turnstile') {
-          setError(fieldEl, e2.message);
-          fieldEl.focus();
+          if (ok) {
+            // No personal data in analytics events.
+            w.dataLayer.push({
+              event: 'generate_lead',
+              form_name: 'quote',
+              property_type: String(fd.get('property_type') || 'not_given'),
+              interests: fd.getAll('interests').join(',') || 'not_given',
+              photo_count: photos.length,
+            });
+            form.hidden = true;
+            done.hidden = false;
+            done.querySelector<HTMLElement>('h2')?.focus();
+            done.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            photos.forEach((p) => URL.revokeObjectURL(p.url));
+            return;
+          }
+
+          // A spam-check problem (usually an expired token): try once more automatically.
+          if (data.field === 'turnstile' && attempt === 0) continue;
+
+          const message = (data.error || 'Sorry, your request didn’t send. Please try again, or call or email us.') +
+            (data.codes?.length ? ` (code: ${data.codes.join(', ')})` : '');
+          showError(message);
+          const fieldEl = data.field && form.querySelector<HTMLInputElement>(`[name="${data.field}"]`);
+          if (fieldEl && data.field !== 'photos' && data.field !== 'turnstile') {
+            setError(fieldEl, data.error || '');
+            fieldEl.focus();
+          }
+          return;
         }
-        // Tokens can only be used once, so get a new one for the next attempt.
+      } catch {
         resetTurnstile();
+        showError('Sorry, your request didn’t send. Please check your connection and try again, or call or email us.');
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send my quote request';
+        resetButton();
       }
     });
   }
@@ -892,7 +942,10 @@ const steps = ['Property', 'What you need', 'Windows', 'Photos', 'Location', 'Ti
     min-height: 2rem;
   }
   .qf__turnstile {
-    margin-top: 1.25rem;
+    margin-top: 1rem;
+  }
+  .qf__turnstile:empty {
+    margin: 0;
   }
   .qf__ts-hint {
     margin: 1.25rem 0 0;

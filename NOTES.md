@@ -2,6 +2,14 @@
 
 A short dated entry for every change, newest first. Open issues are at the bottom.
 
+## 2026-10-12: Quote form spam check fixes (after phone testing)
+
+- Real-phone tests failed the Turnstile check. Two causes: the token (valid 5 minutes, single use) could expire while filling in the form, and when Cloudflare asked for a "Verify you are human" tick it appeared late (only on the last step) and sending didn't continue after ticking.
+- The check now starts quietly on the first interaction with the form, so a token is normally ready by the last step. The box sits above the Next/Send buttons, and if Cloudflare wants a tick a hint appears straight away.
+- Pressing Send waits for the token. If a tick is needed it says "Nearly there…" and sends automatically once ticked. Expired tokens refresh automatically, and a failed check is retried once with a fresh token.
+- The server now logs and returns Cloudflare's Turnstile error codes (no personal data), and the form shows the code if a check ever fails. A fake-token test against the preview returned `invalid-input-response`, which confirms the secret key is valid.
+- Tested locally: normal pass (token ready on step 1, send in about 0.1 s), forced "always needs a tick" key (hint on step 1, waiting message on Send), and a simulated expired token (automatic retry, success). Lighthouse `/quote/`: 100 / 100 / 100 / 100.
+
 ## 2026-10-13: Quote form, contact page and privacy policy
 
 - **Delivery choice:** Cloudflare Pages Function (`functions/api/quote.ts`) plus Resend. Chosen over a form service because it is free at our volume (Resend: 3,000 emails a month), supports photo attachments, keeps the email layout ours, and adds no extra third party beyond Resend. Nothing is stored: the email is the only copy.
